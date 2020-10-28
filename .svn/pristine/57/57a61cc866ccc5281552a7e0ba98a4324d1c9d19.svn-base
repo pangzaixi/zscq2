@@ -1,0 +1,68 @@
+package com.zscq2.zhangdan.bean;
+
+import java.util.Date;
+
+/**
+ * 账单
+ * @author pang
+ *
+ */
+public class ZdBean {
+	private int id;
+	private String zdnum;//账单号
+	private String wtkh;//委托客户
+	private String ajlx;//案件类型
+	private Date zddate;//账单生成日期
+	private Double sumgf;//总官费
+	private Double sumdlf;//总代理费
+	private String remark;//备注
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public String getWtkh() {
+		return wtkh;
+	}
+	public void setWtkh(String wtkh) {
+		this.wtkh = wtkh;
+	}
+	public String getAjlx() {
+		return ajlx;
+	}
+	public void setAjlx(String ajlx) {
+		this.ajlx = ajlx;
+	}
+	public Date getZddate() {
+		return zddate;
+	}
+	public void setZddate(Date zddate) {
+		this.zddate = zddate;
+	}
+	public Double getSumgf() {
+		return sumgf;
+	}
+	public void setSumgf(Double sumgf) {
+		this.sumgf = sumgf;
+	}
+	public Double getSumdlf() {
+		return sumdlf;
+	}
+	public void setSumdlf(Double sumdlf) {
+		this.sumdlf = sumdlf;
+	}
+	public String getRemark() {
+		return remark;
+	}
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+	public String getZdnum() {
+		return zdnum;
+	}
+	public void setZdnum(String zdnum) {
+		this.zdnum = zdnum;
+	}
+
+}

@@ -1,0 +1,140 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<zscript>					
+	
+	import com.yewu.zscq.bean.User;
+	import com.system.utils.LogManage;
+	import com.yewu.zscq.service.WenjianService;
+	import org.zkoss.zkplus.spring.SpringUtil;
+	import java.util.List;
+	import com.zscq2.jxqd.bean.Lazb;
+	import java.util.HashMap;
+	import java.util.Map;
+	import org.zkoss.zul.Listitem;
+	import com.zscq2.jxqd.controller.LazbController;
+</zscript>	
+<zscript><![CDATA[ 
+			User user_login = (User)session.getAttribute("user");
+			String level = user_login.getLevel();//用户等级
+			Boolean level3;//是否是浏览账号
+			if("3".equals(level)){
+				level3 = false;
+			}else{
+				level3 = true;	
+			}
+			Boolean level1;//是否是管理账号
+			if("1".equals(level)){
+				level1 = true;
+			}else{
+				level1 = false;	
+			}
+			String roles  = user_login.getRoles();
+			Boolean p1;//费用管理权限
+			if(roles != null && roles.contains("费用管理")){//如果登录人有费用管理角色，则可以看到官费、代理费等费用
+				p1=true;
+			}else{
+				p1 = false;
+			}
+			
+			Boolean p2;//编辑权限
+			if(roles != null && roles.contains("立案总表更新")){//是否能够看到新增和编辑页面的保存按钮
+				p2=true;
+			}else{
+				p2 = false;
+			}
+			
+			]]></zscript>			
+<window id="importLazb"   border="normal" width="1500px" height="500px" position="center,center" closable="true" 
+	apply="com.zscq2.jxqd.controller.ImportLazbController"  title="导入">
+	
+    <separator></separator>
+    <hlayout spacing="50px"> 
+    	<div>
+	    	<button height="20px" width="60px"  label="确认导入" id="importData"/>
+	    	
+   	    </div>
+   	</hlayout>    
+  
+
+ 
+<separator></separator>
+<div>
+
+	<listbox id="listbox" emptyMessage="未查找到记录"  >
+        <listhead>
+            <listheader label="id" align="center" visible="false"/>
+          
+          <listheader label="案件类型" align="center" width="150PX"/>
+          <listheader label="商标名称" align="center" width="150PX"/>
+          <listheader label="类别" align="center" width="50PX"/>
+          <listheader label="商标号" align="center" width="100PX"/>
+          <listheader label="案件状态" align="center" width="100PX"/>
+          <listheader label="客户委托日期" align="center" width="100PX" />
+          <listheader label="申请日" align="center" width="100PX"/>
+          <listheader label="收文日期" align="center" width="100PX"/>
+          <listheader label="初审日期" align="center" width="100PX"/>
+          <listheader label="公告期" align="center" width="50PX"/>
+          <listheader label="绝限日" align="center" width="100PX"/>
+          <listheader label="首次提交日" align="center" width="100PX"/>
+          <listheader label="首次报送编号" align="center" width="70PX"/>
+          <listheader label="补充期限" align="center" width="100PX"/>
+          <listheader label="补充提交日期" align="center" width="100PX"/>
+          <listheader label="二次报送编号" align="center" width="100PX"/>
+          <listheader label="委托客户名称" align="center" width="300PX"/>
+          <listheader label="被申请人" align="center" width="300PX"/>
+          <listheader label="申请人" align="center" width="100PX"/>
+          <listheader label="官方意见" align="center" width="150PX"/>
+          <listheader label="官方意见收文日" align="center" width="150PX"/>
+          <listheader label="官方意见绝限日" align="center" width="150PX"/>
+          <listheader label="代理人" align="center" width="100PX"/>
+          <listheader label="代理人2" align="center" width="100PX"/>
+          <listheader label="客户付款" align="center" width="100PX"/>
+          <listheader label="盈天付款" align="center" width="100PX"/>
+          <listheader label="案源人" align="center" width="100PX"/>
+          <listheader label="代理公司" align="center" width="250PX"/>
+          <listheader label="状态" align="center" width="150PX"/>
+          <listheader label="备注" align="center" width="150PX"/>
+        </listhead>
+        <template name="model">
+            	<listitem id="${each.id}" value="${each}" style="${each.style}">
+                <listcell label="${each.id}"  style="${each.style}"></listcell>
+                <listcell label="${each.ajlx}" style="${each.style}"></listcell>
+                <listcell label="${each.sbmc}" style="${each.style}"></listcell>
+                <listcell label="${each.lb}" style="${each.style}"></listcell>
+                <listcell label="${each.sbh}" style="${each.style}"></listcell>
+                <listcell label="${each.ajzt}" style="${each.style}"></listcell>
+                <listcell  style="${each.style}">	<label value="${each.khwtrq_str}"></label></listcell>  
+                <listcell label="${each.sqrq_str}"  style="${each.style}"></listcell> 
+                <listcell label="${each.swrq_str}" style="${each.style}"></listcell>
+                <listcell label="${each.csrq_str}" style="${each.style}"></listcell>
+                <listcell label="${each.ggq}" style="${each.style}"></listcell>
+                <listcell label="${each.jxr_str}" style="${each.style}"></listcell>
+                <listcell label="${each.sctjr_str}" style="${each.style}"></listcell>
+                 <listcell label="${each.scbsbh}" style="${each.style}"></listcell>
+                <listcell label="${each.bcqx_str}" style="${each.style}"></listcell>
+                <listcell label="${each.bctjrq_str}" style="${each.style}"></listcell>
+                <listcell label="${each.ecbsbh}" style="${each.style}"></listcell>
+                <listcell label="${each.wtkhmc}" style="${each.style}"></listcell>
+                <listcell label="${each.byyr}" style="${each.style}"></listcell>
+                <listcell label="${each.yysqr}" style="${each.style}"></listcell>
+                <listcell label="${each.gfyj}" style="${each.style}"></listcell>
+                <listcell label="${each.gfyjswr}" style="${each.style}"></listcell>
+                <listcell label="${each.gfyjjxr}" style="${each.style}"></listcell>
+                <listcell label="${each.dlr}" style="${each.style}"></listcell>
+                <listcell label="${each.dlr2}" style="${each.style}"></listcell>
+                <listcell label="${each.khfk}" style="${each.style}"></listcell>
+                <listcell label="${each.ytfk}" style="${each.style}"></listcell>
+                <listcell label="${each.ayr}" style="${each.style}"></listcell>
+                <listcell label="${each.dlgs}" style="${each.style}"></listcell>
+                <listcell label="${each.status}" style="${each.style}"></listcell>
+                <listcell label="${each.remarks}" style="${each.style}"></listcell> 
+            </listitem>
+        </template>
+    </listbox>
+<paging id="paging" pageSize="1000" ></paging>
+</div>
+  
+</window>
+
+
+</zk>

@@ -1,0 +1,56 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<window id="selectPjWin" title="领用详情" border="normal" width="1200px" 
+    apply="com.pjgl.stockUse.controller.OutStockController"
+    position="center,center" closable="true"
+    action="show: slideDown;hide: slideUp">
+    
+<radiogroup id="sv1"/>
+	
+<div>
+    <grid id="detailsbox" >
+    <!-- <auxhead sclass="category-center">
+        <auxheader label="Healthy Food List" colspan="9" rowspan="1" />
+    </auxhead> -->
+    <columns>
+        <column hflex="1">配件名称</column>
+        <column hflex="1">配件规格</column>
+        <column hflex="1">单位</column>
+        <column hflex="1">领用数量</column>
+        <column hflex="1">平均单价</column>
+        <column hflex="1">金额</column>
+        <column hflex="1">车辆</column>
+        <column hflex="1">驾驶员</column>
+        <column hflex="1">电话</column>
+        <column hflex="1">领用日期</column>
+        <column hflex="1">操作人</column>
+        <column hflex="1">备注</column>
+    </columns>
+    <template name="model">
+        <row >
+            <label value="${each.name}" ></label>
+            <label value="${each.spec}"></label>
+            <label value="${each.unit}"></label>
+            <label value="${each.totalNumContrast}"></label>
+            <label value="${each.averagePriceContrast}"></label>
+            <label value="${each.amountsContrast}"></label>
+            <label value="${each.plateNum}"></label>
+            <label value="${each.driver}"></label>
+            <label value="${each.mobile}"></label>
+            <label value="${each.useTimeStr}"></label>
+            <label value="${each.creator}"></label>
+            <label value="${each.remarks}"></label>
+        </row>
+    </template>
+    <foot>
+        <footer  span="12" id="footerDetails"    class="footer_right"></footer>
+    </foot>
+	</grid>    
+<paging id="pagingDetails" pageSize="10" ></paging>
+</div>
+    <zscript><![CDATA[
+	 
+    
+    ]]></zscript>
+</window>
+</zk>

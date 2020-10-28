@@ -1,0 +1,88 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<window width="100%" height="98%">
+
+
+<borderlayout sclass="complex-layout" height="810px">
+            
+            <!-- Sidebar -->
+            <west width="200px" border="0" >
+                <vlayout spacing="0">
+                    <panel width="100%" border="normal"
+                        title="">
+                        <panelchildren style="padding:5px;">
+                         <hlayout > 
+				            <vlayout>
+					            <label>终端标识</label><separator></separator>
+				                <label>日期</label><separator></separator>
+				                <label>公司</label><separator></separator>
+				            </vlayout>
+				            <vlayout>
+				                <textbox id="zdbs"/>
+				                <datebox id="rq" />
+				                <combobox id="company" buttonVisible="true"  width="120px" >
+						       		<template name="model">
+						    		<comboitem label="${each.name}" value="${each.id}" context="${each.mobile }"></comboitem>
+						    		</template>
+						    	</combobox>
+				            </vlayout>
+				          </hlayout>  
+                            <vbox>
+                                <button height="20px" width="60px"  label="查询" id="queryButton" onClick="fresh()"/>
+                            </vbox>
+                        </panelchildren>
+                    </panel>
+                    <panel width="100%" border="normal">
+                    	
+                        <panelchildren>
+                        
+                            <listbox id="cghtbox" emptyMessage="未查找到记录"  >
+						        <listhead>
+						          <listheader label="终端标识" align="center" />
+						          <listheader label="日期" align="center" />
+						        </listhead>
+						            <listitem onClick="fresh2()">
+						            	<listcell label="吉YS-58531"></listcell>
+						            	<listcell label="2018-06-27"></listcell>
+						            </listitem>
+						            <listitem onClick="fresh3()">
+						            	<listcell label="吉YS-58531"></listcell>
+						            	<listcell label="2018-06-29"></listcell>
+						            </listitem>
+						    </listbox>
+						    <paging id="paging" pageSize="10" ></paging>							
+                        </panelchildren>
+                        
+                        
+                    </panel>
+                </vlayout>
+            </west>
+            <center>
+				<iframe id="iframe2" src="/jsp/test/guiji/guiji.html?platenum=吉YS-58531;workdate=2018-06-28" width="100%" height="100%"  />            
+            </center>
+        </borderlayout>    
+            
+
+     
+<zscript><![CDATA[ 	
+	void fresh(){
+		alert(1);
+		iframe2.setSrc("/jsp/test/guiji/guiji.html?platenum=吉YS-58531;workdate=2018-06-28");
+		iframe2.invalidate();//该行是的目标页面重新加载，实现参数传递
+	}
+	
+	void fresh2(){
+//		alert(cghtbox.getSelectedItem().getChildren().get(1).getLabel());
+//		iframe2.setSrc("http://127.0.0.1:8080/pjgl/jsp/test/juhe/tianditu.html");
+		iframe2.setSrc("/jsp/test/guiji/guiji.html?platenum=吉YS-58531;workdate=2018-06-27");
+		iframe2.invalidate();//该行是的目标页面重新加载，实现参数传递
+	}
+	void fresh3(){
+//		alert(cghtbox.getSelectedItem().getChildren().get(1).getLabel());
+		//iframe2.setSrc("http://127.0.0.1:8080/pjgl/jsp/test/juhe/tianditu.html");
+		iframe2.setSrc("/jsp/test/guiji/guiji.html?platenum=吉YS-58531;workdate=2018-06-29");
+		iframe2.invalidate();//该行是的目标页面重新加载，实现参数传递
+	}
+]]></zscript>    
+</window>
+</zk>

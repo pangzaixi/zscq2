@@ -1,0 +1,216 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<zscript>					
+	import com.yewu.hetong.caigou.gtcg.bean.GangtiecaigouhetongMain;
+	import com.yewu.zscq.bean.User;
+	import com.system.utils.LogManage;
+	import com.yewu.zscq.service.WenjianService;
+	import org.zkoss.zkplus.spring.SpringUtil;
+</zscript>	
+<zscript><![CDATA[ 
+			User user_login = (User)session.getAttribute("user");
+			String level = user_login.getLevel();//用户等级
+			Boolean level3;//是否是浏览账号
+			if("3".equals(level)){
+				level3 = false;
+			}else{
+				level3 = true;	
+			}
+			Boolean level1;//是否是管理账号
+			if("1".equals(level)){
+				level1 = true;
+			}else{
+				level1 = false;	
+			}
+			
+			if(user_login != null){//该条件使得，如果用户没有登录，则返回登陆界面
+				
+				
+				
+			}
+			
+			]]></zscript>			
+<window id="gangtiecaigouhetong"  border="none" height="700px" apply="com.yewu.jxqd.controller.JxqdController"  >
+	<grid xmlns:w="client">
+	    <rows>
+	        <row>
+	            <label value="text1: " />
+	            <textbox
+	            	w:onFocus="jq(this.$f('help1')).fadeIn()"
+					w:onBlur="jq(this.$f('help1')).fadeOut()"/>
+	            <label id="help1" visible="false"
+					value="This is help for text1." />
+	        </row>
+	        <row>
+	            <label value="text2: " />
+	            <textbox
+	            	w:onFocus="jq(this.$f('help2')).fadeIn()"
+					w:onBlur="jq(this.$f('help2')).fadeOut()"/>
+	            <label id="help2" visible="false"
+					value="This is help for text2." />
+	        </row>
+	    </rows>
+	</grid>	
+     <hlayout  spacing="350px"> 
+            <vlayout style="border:1px">
+	            <label>案件号</label>
+                <label>商标名称</label>
+                <label>代理人</label>
+            </vlayout>
+            <vlayout style="border:1px">
+                <div><label width="150px" value="案件号_"></label><textbox id="ajh"/></div>
+                <div><label width="150px" value="商标名称"></label><textbox id="sbmc"/></div>
+                <div><label width="150px" value="代理人_"></label><combobox id="dlr" buttonVisible="true"  width="160px">
+             		<comboitem label="${each}"> 
+             		</comboitem>
+             	</combobox>
+             	</div>
+            </vlayout>
+            <vlayout>
+	            <label>商标类别</label>
+                <label>商标号</label>
+            </vlayout>
+            <vlayout>
+                <intbox id="sblb"/>
+                <intbox id="sbh" />
+            </vlayout>
+            
+            
+            <vlayout>
+	            <label>申请日期</label>
+                <label>至</label>
+            </vlayout>
+            <vlayout>
+                <datebox id="sqrq_q1"  />
+                <datebox id="sqrq_q2"  />
+            </vlayout>
+            <vlayout>
+	            <label>绝限日期</label>
+                <label>至</label>
+            </vlayout>
+            <vlayout>
+                <datebox id="jxrq_q1"  />
+                <datebox id="jxrq_q2"  />
+            </vlayout>
+    </hlayout>
+    <separator></separator>
+    <hlayout spacing="50px"> 
+    	<div>
+	    	<button height="20px" width="60px"  label="查询" id="queryButton"/>
+	    	<button height="20px" width="60px"  label="清空" id="clearButton"/>
+   	    	<button height="20px" width="60px"  label="新增" id="addButton" visible="${level3}"/>
+   	    	<button height="20px" width="60px"  label="删除" id="delButton" visible="${level1}"/>
+   	    	<button height="20px" width="60px"  label="下载" id="downButton" visible="false" />
+   	    	<button height="20px" width="60px"  label="导出" id="export" visible="${level1}" />
+   	    	<button height="20px" width="60px"  label="测试" id="testButton" visible="false"/>
+   	    	
+   	    </div>
+   	</hlayout>    
+  
+
+
+<separator></separator>
+<div>
+
+	<listbox id="listbox" emptyMessage="未查找到记录"  >
+        <listhead>
+            <listheader label="id" align="center" visible="false"/>
+          <listheader label="案件号" align="center" width="150PX"/>
+          <listheader label="案件类型" align="center" width="150PX"/>
+          <listheader label="商标名称" align="center" width="150PX"/>
+          <listheader label="类别" align="center" width="150PX"/>
+          <listheader label="商标号" align="center" width="150PX"/>
+          <listheader label="客户委托日期" align="center" width="250PX" style="format:yyyy/MM/dd"/>
+          <listheader label="申请日" align="center" width="250PX" style="format:yyyy/MM/dd"/>
+          <listheader label="收文日期" align="center" width="150PX"/>
+          <listheader label="初审日期" align="center" width="150PX"/>
+          <listheader label="公告期" align="center" width="150PX"/>
+          <listheader label="绝限日" align="center" width="150PX"/>
+          <listheader label="首次提交日" align="center" width="150PX"/>
+          <listheader label="补充期限" align="center" width="150PX"/>
+          <listheader label="补充提交日期" align="center" width="150PX"/>
+          <listheader label="首次报送编号" align="center" width="150PX"/>
+          <listheader label="二次报送编号" align="center" width="150PX"/>
+          <listheader label="委托客户名称" align="center" width="150PX"/>
+          <listheader label="被请求人/商标权人/对方相对人" align="center" width="150PX"/>
+          <listheader label="申请人/请求人/我方当事人" align="center" width="150PX"/>
+          <listheader label="官方结果" align="center" width="150PX"/>
+          <listheader label="代理人" align="center" width="150PX"/>
+          <listheader label="代理人2" align="center" width="150PX"/>
+          <listheader label="案源人" align="center" width="150PX"/>
+          <listheader label="代理公司" align="center" width="150PX"/>
+          <listheader label="官费" align="center" width="150PX"/>
+          <listheader label="代理费" align="center" width="150PX"/>
+          <listheader label="客户付款" align="center" width="150PX"/>
+          <listheader label="已给客户开票" align="center" width="150PX"/>
+          <listheader label="代交公司付款" align="center" width="150PX"/>
+          <listheader label="已给代交公司开票" align="center" width="150PX"/>
+          <listheader label="代理人已支付提成费" align="center" width="150PX"/>
+          <listheader label="案源人已支付提成费" align="center" width="150PX"/>
+          
+        </listhead>
+        <template name="model">
+            	<listitem id="${each.id}">
+                <listcell label="${each.id}"></listcell>
+                <listcell label="${each.ajh}"></listcell>
+                <listcell label="${each.ajlx}"></listcell>
+                <listcell label="${each.sbmc}"></listcell>
+                <listcell label="${each.lb}"></listcell>
+                <listcell label="${each.sbh}"></listcell>
+                <listcell >	<label value="${each.khwtrq_str}"></label></listcell>  
+                <listcell label="${each.sqr_str}" ></listcell> 
+                <listcell label="${each.swrq_str}"></listcell>
+                <listcell label="${each.csrq_str}"></listcell>
+                <listcell label="${each.ggq}"></listcell>
+                <listcell label="${each.jxr_str}"></listcell>
+                <listcell label="${each.sctjr_str}"></listcell> 
+                <listcell label="${each.bcqx}"></listcell>
+                <listcell label="${each.bctjrq_str}"></listcell>
+                <listcell label="${each.scbsbh}"></listcell>
+                <listcell label="${each.ecbsbh}"></listcell>
+                <listcell label="${each.wtkhmc}"></listcell>
+                <listcell label="${each.bqqr}"></listcell>
+                <listcell label="${each.wfdsr}"></listcell>
+                <listcell label="${each.gfjg}"></listcell>
+                <listcell label="${each.dlr}"></listcell>
+                <listcell label="${each.dlr2}"></listcell>
+                <listcell label="${each.ayr}"></listcell>
+                <listcell label="${each.dlgs}"></listcell>
+                <listcell label="${each.gf}"></listcell>
+                <listcell label="${each.dlf}"></listcell>
+                <listcell label="${each.khfk}"></listcell>
+                <listcell label="${each.ygkhkp}"></listcell>
+                <listcell label="${each.djgsfk}"></listcell>
+                <listcell label="${each.ygdjgskp}"></listcell>
+                <listcell label="${each.dlryzftcf}"></listcell>
+                <listcell label="${each.ayryzftcf}"></listcell>
+                
+            </listitem>
+        </template>
+    </listbox>
+<paging id="paging" pageSize="10" ></paging>
+</div>
+<zscript><![CDATA[
+	 
+    void downLoad(String path) {
+    	try{
+    		
+    		LogManage logManage = new LogManage();
+    		String[] temp = path.split("/");
+			 String remarks = "下载文件"+temp[temp.length-1];
+			 User user = (User)session.getAttribute("user");
+			 logManage.addLog(remarks,user);
+			
+			Filedownload.save(path, null);
+
+    	}catch (Exception e){
+    		Messagebox.show("文件下载失败");
+    	}
+    }
+    
+    
+]]></zscript>
+    
+  
+</window>
+</zk>

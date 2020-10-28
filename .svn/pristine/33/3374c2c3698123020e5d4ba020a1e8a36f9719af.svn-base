@@ -1,0 +1,130 @@
+<?page title="账单管理" contentType="text/html;charset=UTF-8"?>
+<zk>
+<zscript>					
+	
+	import com.yewu.zscq.bean.User;
+	import com.system.utils.LogManage;
+	import org.zkoss.zkplus.spring.SpringUtil;
+	import java.util.List;
+	import java.util.HashMap;
+	import java.util.Map;
+	import org.zkoss.zul.Listitem;
+	
+</zscript>		
+<window>	
+<separator></separator>		
+<radiogroup id="sv1"/>
+	<vlayout>
+	<div height="30px" style="background:#FACC2E"><label style="font-size:26px; color: blue;"></label></div>
+     <hlayout> 
+            <vlayout style="border:1px">
+	            <label>温室</label>
+	            <separator></separator>
+                
+            </vlayout>
+            <vlayout>
+            	<combobox id="greenHouseName_p" buttonVisible="true"  width="160px" readonly="true">
+			      	<template name="model">
+						<comboitem label="${each.name}" value="${each.code}"></comboitem>
+					</template>
+			 	</combobox>
+            </vlayout>
+               
+    </hlayout>
+    </vlayout>
+    <separator></separator>
+    <hlayout spacing="50px"> 
+    	<div>
+	    	<button height="20px" width="60px"  label="查询" id="queryButton" />
+	    	<button height="20px" width="60px"  label="清空" id="clearButton"/>
+   	    	<button height="20px" width="60px"  label="新增" id="addButton"/>
+   	    	<button height="20px" width="60px"  label="编辑" id="editButton"/>
+   	    	<space width="100px"></space>
+   	    	<button height="20px" width="60px"  label="删除" id="deleteButton"/>
+   	    	<button height="20px" width="60px"  label="导出" id="exportButton"/>
+   	    </div>
+   	</hlayout>    
+  
+
+
+<separator bar="true"></separator>				
+
+<window id="zhangdanWin"  border="none"   width="100%" height="98%" minheight="500" sizable="true" position="left,top" closable="true" maximizable="true"
+apply="com.zscq2.zhangdan.conftroller.ZahngdanController" action="show: slideDown;hide: slideUp" 
+>
+
+<borderlayout  height="95%" width="100%" >
+<center autoscroll="true" border="none" >
+<panel border="none" sizable="true" ><panelchildren>
+
+	
+<div>
+
+	<listbox id="listbox" emptyMessage="未查找到记录" height="400px">
+        <listhead>
+          <listheader label="温室名称" align="center" width="100PX"/>
+          <listheader label="设备识别码" align="center" width="100PX"/>
+          <listheader label="设备名称" align="center" width="150PX"/>
+          <listheader label="备注" align="center" width="150PX"/>
+          <listheader label="id" align="center" visible="false"/>
+        </listhead>
+        <template name="model">
+            <listitem id="${each.id}" value="${each}" >
+            	<listcell label="${each.greenHouseName}"></listcell>
+                <listcell label="${each.picNo}"></listcell>
+                <listcell label="${each.machineName}"></listcell>
+                <listcell label="${each.remarks}"></listcell>
+                <listcell label="${each.id}" ></listcell>
+            </listitem>
+        </template>
+        <listfoot>
+        	<listfooter align="left">
+        		
+        	</listfooter>
+        	<listfooter >
+        			
+        	</listfooter>
+        	<listfooter></listfooter>
+        	<listfooter><label id="recordCount">总数：</label></listfooter>
+        </listfoot>
+         
+    </listbox>
+    <hlayout>
+    	<combobox id="pagesize" buttonVisible="true"  width="50px" readonly="true">
+  			<comboitem label="10" value="10" ></comboitem>
+	    	<comboitem label="20" value="20" ></comboitem>
+	     	<comboitem label="30" value="30" ></comboitem>
+	     	<comboitem label="50" value="50" ></comboitem>
+	    </combobox>
+			    
+		<paging id="paging" pageSize="10" width="350px"></paging >			    
+    </hlayout>
+    
+       	
+        	
+    
+
+</div>
+<zscript><![CDATA[
+pagesize.setSelectedIndex(0);//页面记录数默认值设置   
+		 
+
+]]></zscript>
+
+
+</panelchildren>
+</panel>
+</center>
+</borderlayout>  
+</window>
+<zscript><![CDATA[
+   void shuoming(){
+   	
+   }
+
+   
+]]></zscript>              
+                  
+</window>
+
+</zk>

@@ -1,0 +1,174 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<zscript>					
+	import com.yewu.zscq.bean.User;
+</zscript>
+<window id="addJxqd" title="新增" border="normal" width="900px" height="650px"
+    apply="com.zscq2.jxqd.controller.AddLazbController"
+    position="center,center" closable="true"
+    action="show: slideDown;hide: slideUp">
+    
+    <zscript><![CDATA[ 
+			User user_login = (User)session.getAttribute("user");
+			
+			String roles  = user_login.getRoles();
+			Boolean p1;//费用管理权限
+			if(roles != null && roles.contains("费用管理")){//如果登录人有费用管理角色，则可以看到官费、代理费等费用
+				p1=true;
+			}else{
+				p1 = false;
+			}
+			Boolean p2;//编辑权限
+			if(roles != null && roles.contains("立案总表更新")){//是否能够看到新增和编辑页面的保存按钮
+				p2=true;
+			}else{
+				p2 = false;
+			}
+]]></zscript>                     
+    
+    <vlayout>
+        <grid>
+            <columns>
+                <column hflex="1" label="" />
+                <column hflex="2" label="" align="center" />
+                <column hflex="1" label=""/>
+                <column hflex="2" label="" align="center" />
+                <column hflex="1" label=""/>
+                <column hflex="2" label="" align="center" />
+            </columns>
+            <rows>
+                <row>
+                    
+                    <label value="商标名称" width="150px" />
+                    <textbox id="sbmc" width="150px" tabindex="2"  />
+                
+                    <label value="类别" width="150px" />
+                    <hlayout>
+                        <textbox id="lb" width="150px" tabindex="3" />
+                    </hlayout>
+                </row>
+                <row>
+                    <label value="商标号" width="150px" />
+                    <textbox id="sbh" width="150px" tabindex="4"  />
+                    <label value="案件状态" width="150px" />
+                    <combobox id="ajzt_c" buttonVisible="true"  width="160px" readonly="true">
+                		<template name="model">
+             				<comboitem label="${each.ajzt}"  value="${each.ajzt}"></comboitem>
+             			</template>
+             		</combobox>
+                    <label value="案件类型" width="150px" />
+                    <!-- <textbox id="ajlx" width="150px" tabindex="5"/> -->
+                    <combobox id="ajlx" buttonVisible="true"  width="160px" readonly="true">
+                    	<template name="model">
+             				<comboitem label="${each.ajlx}" value="${each.ajlx}"></comboitem>
+             			</template>
+             		</combobox>
+                </row>
+                <row>
+                    <label value="客户委托日期" width="150px" />
+                    <hlayout>
+                        <datebox id="khwtrq" width="150px" readonly="true"  tabindex="1" />
+                    </hlayout>
+                    <label value="申请日" width="150px" />
+                    <datebox id="sqrq" width="150px" readonly="true" tabindex="2"  />
+                
+                    <label value="收文日期" width="150px" />
+                    <datebox id="swrq" width="150px" readonly="true" tabindex="3" />
+                    
+                </row>
+                <row>
+                    <label value="初审日期" width="150px" />
+                    <hlayout>
+                        <datebox id="csrq" width="150px" readonly="true" tabindex="1" />
+                    </hlayout>
+                    <label value="公告期" width="150px" />
+                    <textbox id="ggq" width="150px" tabindex="5"/>
+                
+                    <label value="绝限日" width="150px" />
+                    <datebox id="jxr" width="150px" readonly="true" tabindex="3" />
+                    
+                </row>
+                <row>
+                    <label value="首次提交日" width="150px" />
+                    <hlayout>
+                        <datebox id="sctjr" width="150px" readonly="true" tabindex="1" />
+                    </hlayout>
+                    <label value="补充期限" width="150px" />
+                    <datebox id="bcqx" width="150px" tabindex="5" readonly="true"/>
+                
+                    <label value="补充提交日期" width="150px" />
+                    <datebox id="bctjrq" width="150px" readonly="true" tabindex="3" />
+                    
+                </row>
+                <row>
+                	<label value="首次报送编号" width="150px" />
+                	<textbox id="scbsbh" width="150px" tabindex="5"/>
+                	<label value="二次报送日期" width="150px" />
+                	<textbox id="ecbsbh" width="150px" tabindex="5"/>
+                	<label value="委托客户名称" width="150px" />
+                	<textbox id="wtkhmc" width="150px" tabindex="5"/>
+                </row>
+                <row>
+                	<label value="被申请人" width="150px" />
+                	<textbox id="byyr" width="150px" tabindex="5"/>
+                	<label></label>
+                	<label></label>
+                	<label value="客户付款" width="150px" />
+                	<textbox id="khfk" width="150px" tabindex="5"/>
+                </row>
+                <row>
+                	<label value="代理人" width="150px" />
+                	<textbox id="dlr" width="150px" tabindex="5"/>
+                	
+                	<label value="申请人" width="150px" />
+                	<textbox id="yysqr" width="150px" tabindex="5"/>
+                	<label value="盈天付款" width="150px" />
+                	<textbox id="ytfk" width="150px" tabindex="5"/>
+                </row>
+                <row>
+                	<label value="代理人2" width="150px" />
+                	<textbox id="dlr2" width="150px" tabindex="5"/>
+                	
+                	
+                	<label value="案源人" width="150px" />
+                	<textbox id="ayr" width="150px" tabindex="5"/>
+                
+                	<label value="代理公司" width="150px" />
+                	<textbox id="dlgs" width="150px" tabindex="5"/>
+                </row>
+                <row>
+                	<label value="官方意见" width="150px" />
+                	<textbox id="gfyj" width="150px" tabindex="5"/>
+                	<label value="官方意见收文日期" width="150px" />
+                	<datebox id="gfyjswr" width="150px" readonly="true" tabindex="3" />
+                	<label value="官方意见绝限日" width="150px" />
+                	<datebox id="gfyjjxr" width="150px" readonly="true" tabindex="3" />
+                </row>
+                <row>
+                	<cell><label value="备注" width="150px" /></cell>
+                	<cell  colspan="5" align="center">
+                		<textbox id="remarks" width="700px" rows="3"></textbox>
+                	</cell>
+                </row>
+                <row>
+                	<cell colspan="6" align="center">
+						<button id="addBtn" label="保存" width="100px" visible="${p2}"/>    
+						<button id="closeBtn" label="关闭" width="100px" onClick="closeWin()"/>   
+	         	
+                	</cell>
+                </row>
+                
+            </rows>
+        </grid>
+         
+    </vlayout>
+    <zscript><![CDATA[
+	 
+    void closeWin() {
+    	addJxqd.detach();//关闭窗口	
+    }
+   
+    	]]></zscript>	
+    
+</window>
+</zk>

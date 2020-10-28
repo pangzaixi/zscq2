@@ -1,0 +1,80 @@
+<?page title="测试系统" contentType="text/html;charset=UTF-8"?>
+
+<zk>
+<zscript>					
+	import com.yewu.zscq.bean.User;
+	
+</zscript>
+<style src="./style.css"/>
+	<window  id="main" width="100%" height="100%" apply="com.system.os.controller.OsComposer"> 
+		<zscript><![CDATA[ 
+			User user_login = (User)session.getAttribute("user");
+			if(user_login == null){//该条件使得，如果用户没有登录，则返回登陆界面
+				//Executions.sendRedirect("../");
+				
+				//用这种方式重定向页面可以带参数Executions.sendRedirect("b.zul?value="+tb1.getValue());
+				//新页面对应类中用Executions.getCurrent(). getAttribute（"value"）获得值
+			}
+			public void zx(){
+				session.removeAttribute("user");
+				Executions.sendRedirect("../");
+			}
+			public void aa(){
+				alert("111");
+			}
+		]]></zscript>
+		<borderlayout>
+			<north  size="100px">
+				<borderlayout width="100%">
+					<west border="none"> 
+						<hbox  style="background:red"><image  src=""/></hbox>
+					</west>
+					<center border="none">	
+						<hbox pack="center" width="100%">
+							<vbox> 
+								<separator/>
+								<div align="center">
+									<label visible="true"  value="管理系统" style="color:#008BB6;font-size:40px" />
+								</div>
+							</vbox>	
+							<vbox pack="right" width="100%">
+								<separator/>
+								<separator/>
+								<separator/>
+								<separator/>
+								<div align="right">
+									
+								</div>	
+							</vbox>					
+						</hbox>
+						
+					</center>
+					<south  border="none">
+					<menubar id="menubar" autodrop="true"></menubar>
+					</south>
+				 </borderlayout>
+			</north>
+			<west size="200px" splittable="true" flex="true" collapsible="true" title=" " autoscroll="true" > 
+			<div><!-- div可以产生滚动效果 -->
+				<panel><panelchildren >
+				<listbox id="menuListbox" style="border:none"/>	
+				
+				</panelchildren></panel>
+				</div>	
+			</west>
+			<center flex="false" autoscroll="true">
+				<panel><panelchildren >
+					<tabbox id="tabbox" height="800px">
+						<tabs>
+							<tab id="shouye" label="首页" />
+						</tabs>
+						<tabpanels >
+							 <tabpanel height="100%">This is panel A</tabpanel>
+						</tabpanels>
+					</tabbox>
+				</panelchildren></panel>
+			</center>
+			
+		</borderlayout>
+	</window>
+</zk>

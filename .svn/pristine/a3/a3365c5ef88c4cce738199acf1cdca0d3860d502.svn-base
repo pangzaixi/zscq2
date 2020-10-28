@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zscq2.zhangdan.dao.ZdDao">
+
+    <!-- 获取账单主表记录 -->
+    <select id="selectZd" parameterType="map" resultType="com.zscq2.zhangdan.bean.ZdBean">
+        sELECT * FROM zscq_sb_zd 
+	  
+        <where>
+        <if test="ajh != null and ajh != ''">
+			and id in (
+				select zdid  from zscq_sb_zd_sub where ajid in (
+					select id from zscq_sb_lazb where  ajh =#{ajh}))
+		</if>
+        <if test="wtkh != null and wtkh != ''">
+			and wtkh=#{wtkh}
+		</if>
+		<if test="ajlx != null and ajlx != ''">
+			and ajlx=#{ajlx}
+		</if>
+		
+		<if test="zdrq_q1 != null and zdrq_q1 != ''">
+		    AND zddate   <![CDATA[ >= ]]> DATE_FORMAT(#{zdrq_q1},'%Y-%m-%d')
+		</if>
+		<if test="zdrq_q2 != null and zdrq_q2 != ''">
+		    AND zddate  <![CDATA[ < ]]> DATE_FORMAT(#{zdrq_q2},'%Y-%m-%d')
+		</if>
+		
+		</where>
+		  ORDER BY ID DESC
+		limit #{begin},#{end}
+    </select>
+<!-- 获取账单主表记录 总数-->
+<select id="selectZd_count" parameterType="map" resultType="int">
+    sELECT count(1) FROM zscq_sb_zd 
+    <where>
+    	<if test="ajh != null and ajh != ''">
+			and id in (
+				select zdid  from zscq_sb_zd_sub where ajid in (
+					select id from zscq_sb_lazb where  ajh =#{ajh}))
+		</if>
+    	<if test="wtkh != null and wtkh != ''">
+			and wtkh=#{wtkh}
+		</if>
+		<if test="ajlx != null and ajlx != ''">
+			and ajlx=#{ajlx}
+		</if>
+		
+		<if test="zdrq_q1 != null and zdrq_q1 != ''">
+		    AND zddate   <![CDATA[ >= ]]> DATE_FORMAT(#{zdrq_q1},'%Y-%m-%d')
+		</if>
+		<if test="zdrq_q2 != null and zdrq_q2 != ''">
+		    AND zddate  <![CDATA[ < ]]> DATE_FORMAT(#{zdrq_q2},'%Y-%m-%d')
+		</if>
+    </where>
+   
+</select>
+
+<select id="selectZd_sub" parameterType="map" resultType="com.zscq2.zhangdan.bean.ZdDetail">
+SELECT z.*,l.* from zscq_sb_zd_sub z left join zscq_sb_lazb l on z.ajid = l.id where zdid=#{zdid} order by z.id 
+</select>
+<!-- 获得官费代理费总费用汇总额 -->
+<select id="getSumJe" parameterType="map" resultType="map">
+SELECT sum(gf) as a,sum(dlf) as b,sum(dlf+gf) as c,sum(dlfyt) as d from zscq_sb_zd_sub z where z.zdid in (${ids})   
+</select>
+
+<!-- 获得所有委托客户名称    CONVERT方法使得中文字段案拼音排序-->
+<select id="selectAllWtkhmc" parameterType="map" resultType="com.zscq2.jxqd.bean.Lazb">
+	SELECT DISTINCT wtkhmc from zscq_sb_lazb order by CONVERT(wtkhmc USING gbk) asc
+</select>
+ <!-- 获取立案记录 ,已生成账单的不再显示-->
+    <select id="selectJXQD" parameterType="map" resultType="com.zscq2.jxqd.bean.Lazb">
+        sELECT * FROM zscq_sb_lazb 
+	  
+        where id not in(select ajid from zscq_sb_zd_sub)
+        	
+        <if test="wtkhmc != null and wtkhmc != ''">
+		    AND wtkhmc =#{wtkhmc}
+		</if>
+		
+		<if test="ajlx != null and ajlx != ''">
+		    AND ajlx =#{ajlx}
+		</if>
+		<if test="ggq != null and ggq != ''">
+		    AND ggq =#{ggq}
+		</if>
+		<if test="byyr != null and byyr != ''">
+		    AND byyr =#{byyr}
+		</if>
+		<if test="sbmc != null and sbmc != ''">
+		    AND sbmc =#{sbmc}
+		</if>
+		<if test="ids != null and ids != ''">
+		    AND id not in(${ids})
+		</if>
+		<if test="wtrq1 != null and wtrq1 != ''">
+		    AND khwtrq   <![CDATA[ >= ]]> DATE_FORMAT(#{wtrq1},'%Y-%m-%d')
+		</if>
+		<if test="wtrq2 != null and wtrq2 != ''">
+		    AND khwtrq  <![CDATA[ < ]]> DATE_FORMAT(#{wtrq2},'%Y-%m-%d')
+		</if>
+		<if test="sbh != null and sbh != ''">
+		    AND sbh =#{sbh}
+		</if>
+			 order by id limit 300
+    </select>
+<!-- 获取立案记录 总数-->
+<select id="selectJXQD_count" parameterType="map" resultType="int">
+    sELECT count(1) FROM zscq_sb_lazb 
+    	where id not in(select ajid from zscq_sb_zd_sub)
+    	 <if test="wtkhmc != null and wtkhmc != ''">
+		    AND wtkhmc =#{wtkhmc}
+		</if>
+		
+		<if test="ajlx != null and ajlx != ''">
+		    AND ajlx =#{ajlx}
+		</if>
+		<if test="ggq != null and ggq != ''">
+		    AND ggq =#{ggq}
+		</if>
+		<if test="byyr != null and byyr != ''">
+		    AND byyr =#{byyr}
+		</if>
+		<if test="sbmc != null and sbmc != ''">
+		    AND sbmc =#{sbmc}
+		</if>
+		<if test="ids != null and ids != ''">
+		   AND id not in(${ids})
+		</if>
+		<if test="wtrq1 != null and wtrq1 != ''">
+		    AND khwtrq   <![CDATA[ >= ]]> DATE_FORMAT(#{wtrq1},'%Y-%m-%d')
+		</if>
+		<if test="wtrq2 != null and wtrq2 != ''">
+		    AND khwtrq  <![CDATA[ < ]]> DATE_FORMAT(#{wtrq2},'%Y-%m-%d')
+		</if>
+		<if test="sbh != null and sbh != ''">
+		    AND sbh =#{sbh}
+		</if>
+</select>
+<!-- 插入账单主记录 -->
+<insert id="insertZd" parameterType="com.zscq2.zhangdan.bean.ZdBean"  useGeneratedKeys="true" keyProperty="id" keyColumn="id" > 
+  insert into zscq_sb_zd
+  (zdnum,wtkh,ajlx,zddate,sumgf,sumdlf) 
+  values(#{zdnum}, #{wtkh}, #{ajlx}, sysdate(), #{sumgf},#{sumdlf})
+  
+</insert>
+
+
+<!-- 插入账单主记录 -->
+<insert id="insertZd_sub" parameterType="com.zscq2.zhangdan.bean.ZdDetail"  useGeneratedKeys="true" keyProperty="id" keyColumn="id" > 
+  insert into zscq_sb_zd_sub
+  (zdid,ajid,remark,gf,dlf,wtnr) 
+  values(#{zdid}, #{ajid}, '', #{gf}, #{dlf},#{wtnr})
+  
+</insert>
+<!-- 删除账单主表记录  -->
+<delete id="deleteZd"  parameterType="map" >
+	delete from zscq_sb_zd where  id=#{id} 
+</delete>
+<!-- 删除账单子表记录  -->
+<delete id="deleteZd_sub"  parameterType="map">
+	delete from zscq_sb_zd_sub where  zdid=#{id} 
+</delete>
+
+<!-- 更新账单主记录 -->
+<update id="updateZd" parameterType="com.zscq2.zhangdan.bean.ZdBean" >
+	update zscq_sb_zd	set		sumgf=#{sumgf}  ,  sumdlf=#{sumdlf},sumgfYt=#{sumgfYt}  ,  sumdlfYt=#{sumdlfYt}
+	 ,wtrqZd=#{wtrqZd}	where id=#{id}
+</update>
+<!-- 更新账单备注 -->
+<update id="updateZdRemarks" parameterType="com.zscq2.zhangdan.bean.ZdBean" >
+	update zscq_sb_zd	set		remark=#{remark}   	where id=#{id}
+</update>
+
+<!-- 更新账单子记录 -->
+<update id="updateZd_sub" parameterType="map" >
+	update zscq_sb_zd_sub	set		gf=#{gf}  ,  dlf=#{dlf},wtnr=#{wtnr},gfYt=#{gfYt}  ,  dlfYt=#{dlfYt} 
+		where id in (${ids})
+</update>
+<!-- 我方公司主体 -->
+<select id="selectWfCompany" parameterType="map" resultType="com.zscq2.zhangdan.bean.WfCompany">
+	select * from zscq_wfzt
+</select>
+</mapper>

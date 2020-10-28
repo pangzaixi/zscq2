@@ -1,0 +1,44 @@
+<zk>
+    
+    <grid apply="com.system.grid.controller.DynamicRendererController">
+        <auxhead sclass="category-center">
+            <auxheader label="Healthy Food List" colspan="6" rowspan="1" />
+        </auxhead>
+        <auxhead sclass="category-center">
+            <auxheader label="Category Select" colspan="1" rowspan="1" />
+            <auxheader colspan="5" rowspan="1">
+                <radiogroup id="categorySelector">
+                    <hlayout width="100%">
+                        <radio label="All Food" checked="true" width="90px" />
+                        <radio label="Vegetables" width="90px" />
+                        <radio label="Seafood" width="90px" />
+                        <radio label="Fruits" width="90px" />
+                        <radio label="Poultry &amp; Lean Meats" width="200px" />
+                    </hlayout>
+                </radiogroup>
+            </auxheader>
+        </auxhead>
+        <columns>
+            <column hflex="2">Category</column>
+            <column hflex="2">Name</column>
+            <column hflex="1">Top Nutrients</column>
+            <column hflex="1">% of Daily</column>
+            <column hflex="1">Calories</column>
+            <column hflex="2">Quantity</column>
+        </columns>
+        <template name="model">
+            <row>
+                <label value="${each.category}"></label>
+                <label value="${each.name}"></label>
+                <label value="${each.topNutrients}"></label>
+                <label value="${each.dailyPercent}"></label>
+                <label value="${each.calories}"></label>
+                <label value="${each.quantity}"></label>
+            </row>
+        </template>
+        <foot>
+            <footer span="6" id="footer_category" class="footer_right" />
+        </foot>
+    </grid>
+    <paging id="paging" pageSize="10" ></paging>
+</zk>

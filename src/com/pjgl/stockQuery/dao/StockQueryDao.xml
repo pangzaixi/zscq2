@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.pjgl.stockQuery.dao.StockQueryDao">
+
+    <!-- 获取库存记录 -->
+    <select id="selectStockQuery" parameterType="map" resultType="com.pjgl.stockQuery.bean.StockQuery">
+        sELECT s.*,p.name as pjname 
+        FROM pjgl_stock_check s , pjgl_pj p 
+        where s.pjid = p.id and  s.companyId = #{companyId}
+	  	  	
+	  	<if test="pjName != null and pjName != ''">
+		     AND p.name like CONCAT('%',#{pjName},'%')
+		</if>
+		
+		<if test="pjid != null and pjid != ''">
+		    AND s.pjid = #{pjid}
+		</if>
+		<if test="startDate != null">
+		    AND s.checkTime <![CDATA[ >= ]]> #{startDate}
+		</if>
+		<if test="endDate != null">
+		    AND s.checkTime <![CDATA[ <= ]]> #{endDate}
+		</if>
+		<if test="erweima != null and erweima != ''">
+		    AND p.code = #{erweima}
+		</if> 
+		ORDER BY s.checkTime DESC
+		limit #{begin},#{end}
+    </select>
+<!-- 获取库存记录 总数-->
+<select id="selectStock_count" parameterType="map" resultType="int">
+    sELECT count(1) FROM pjgl_stock_check s , pjgl_pj p 
+    where s.pjid = p.id and  s.companyId = #{companyId}
+       	<if test="pjName != null and pjName != ''">
+		    AND p.name like CONCAT('%',#{pjName},'%')
+		</if>
+		<if test="pjid != null and pjid != ''">
+		    AND s.pjid = #{pjid}
+		</if>
+		<if test="erweima != null and erweima != ''">
+		    AND p.code = #{erweima}
+		</if>
+</select>
+
+
+<select id="getByPj" parameterType="map" resultType="com.pjgl.stockQuery.bean.StockQuery">
+        sELECT s.* 
+        FROM pjgl_stock_check s 
+	  	
+	  	where s.pjid = #{pjid} and  s.companyId = #{companyId}
+		 
+    </select>
+
+</mapper>

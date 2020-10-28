@@ -1,0 +1,382 @@
+package com.zscq2.zhangdan.conftroller;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.math.BigInteger;
+import java.util.List;
+
+import org.apache.poi.xwpf.model.XWPFHeaderFooterPolicy;
+import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
+import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.apache.poi.xwpf.usermodel.XWPFTable;
+import org.apache.poi.xwpf.usermodel.XWPFTableCell;
+import org.apache.poi.xwpf.usermodel.XWPFTableRow;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTText;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTVerticalJc;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STVerticalJc;
+
+public class PoiExport {
+	public static void main(String args[]) throws Exception {
+		myWord();
+	}
+	public static void myWord() throws IOException {
+		
+	    XWPFDocument doc = new XWPFDocument();
+	    
+	    setHeaderAndFooter(doc);//设置页眉页脚
+	    
+	    XWPFParagraph para = doc.createParagraph();
+	  //设置段落居中
+	    para.setAlignment(ParagraphAlignment.LEFT);
+	    XWPFRun run1 = para.createRun();
+	    setForm(run1, 1, "建筑专业绿色建筑专篇-电气篇", false, "000000");
+	    setForm(run1, 1, "一、设计依据", false, "000000");
+	    setForm(run1, 1, "1、国家标准", false, "000000");
+	    setForm(run1, 1, "    1).《绿色建筑评价标准》 GB/T 50378-2014", false,
+	            "000000");
+	    setForm(run1, 1, "    2).《建筑照明设计标准》 GB50034-2013", false, "000000");
+	    setForm(run1, 1, "2、行业标准", false, "000000");
+	    setForm(run1, 1, "    1).《民用建筑电气设计规范》 JGJ 16-2008", false,
+	            "000000");
+	    setForm(run1, 1, "3、地方标准", false, "000000");
+	    setForm(run1, 1, "    1).《吉林省绿色建筑评价标准》 DB22/JT137—2015", false,
+	            "000000");
+	    setForm(run1, 1, "4、其他依据", false, "000000");
+	    setForm(run1, 1, "    1).《绿色建筑评价标准应用技术图示》 15J904", false, "000000");
+	    setForm(run1, 2, "    2).《绿色建筑评价技术细则2015》", false, "000000");
+	    setForm(run1, 1, "二、工程概况", false, "000000");
+	    setForm(run1, 1, "项目名称：", false, "000000");
+	    setForm(run1, 1, "建设单位：", false, "000000");
+	    setForm(run1, 1, "设计单位：", false, "000000");
+	    setForm(run1, 1, "详细地址：", false, "000000");
+	    setForm(run1, 1, "总用地面积：_______平方米；总建筑面积：_______平方米；", false,
+	            "000000");
+	    setForm(run1, 1, "地上建筑面积：_______平方米；地下建筑面积：_______平方米；", false,
+	            "000000");
+	    setForm(run1, 1, "建筑基底面积：_______平方米；道路广场面积：_______平方米；", false,
+	            "000000");
+	    setForm(run1, 1, "建筑容积率:_______；  绿地率：_______；", false, "000000");
+	    setForm(run1, 1, "机动车停车位：_______（个），其中地上停车位_______（个），", false,
+	            "000000");
+	    setForm(run1, 1, "地下停车位_______（个）；非机动车停车位_______（个）。 ", false,
+	            "000000");
+	    setForm(run1, 1, "三、绿色建筑设计目标及自评分情况", false, "000000");
+	    setForm(run1, 1,
+	            "本项目绿色建筑设计目标为《绿色建筑评价标准》DB22/JT137-2015标准的一星级。自评分", false,
+	            "000000");
+	    setForm(run1, 1, "情况见下表：", false, "000000");
+
+	    // 创建一个8行1列的表格
+	    XWPFTable table = doc.createTable(8, 1);
+	    List<XWPFTableRow> rows = table.getRows();
+	    // 表格的行row
+	    XWPFTableRow row;
+	    List<XWPFTableCell> cells;
+	    // 单个单元格Cell
+	    XWPFTableCell cell = null;
+	    for (int i = 0; i < 8; i++) {
+	        // 获取第i行
+	        row = rows.get(i);
+	        // 设置行宽高
+	        if (i == 0) {
+	            row.setHeight(800);
+	        } else {
+	            row.setHeight(600);
+	        }
+	        // 获取第i行单元格
+	        cells = row.getTableCells();
+	        cell = cells.get(0);
+	        setProperties(cell, 1);
+	        switch (i) {
+	        case 0:
+	            cells.get(0).setText("评价指标");
+	            break;
+	        case 1:
+	            cells.get(0).setText("总分值");
+	            break;
+	        case 2:
+	            cells.get(0).setText("实际总分值");
+	            break;
+	        case 3:
+	            cells.get(0).setText("自评得分");
+	            break;
+	        case 4:
+	            cells.get(0).setText("换算得分");
+	            break;
+	        case 5:
+	            cells.get(0).setText("权重系数");
+	            break;
+	        case 6:
+	            cells.get(0).setText("权重得分");
+	            break;
+	        }
+
+	        // 在第i行创建j个单元格
+	        for (int j = 1; j < 7; j++) {
+
+	            if (i < 7) {
+	                cell = row.addNewTableCell();
+	                // 定位i行，j列的单元格。
+	                cell = cells.get(j);
+	                // 单元格属性
+	                setProperties(cell, 1);
+	                // 设置单元格文本
+	                if (i == 0) {
+	                    if (j == 1) {
+	                        cells.get(j).setText("节地与室外环境");
+	                    }
+	                    if (j == 2) {
+	                        cells.get(j).setText("节能与能源利用");
+	                    }
+	                    if (j == 3) {
+	                        cells.get(j).setText("节水与水资源利用");
+	                    }
+	                    if (j == 4) {
+	                        cells.get(j).setText("节材与材料资源利用");
+	                    }
+	                    if (j == 5) {
+	                        cells.get(j).setText("室内环境质量");
+	                    }
+	                    if (j == 6) {
+	                        cells.get(j).setText("提高与创新");
+	                    }
+
+	                }
+	                if (i == 1) {
+
+	                    if (j == 1 || j <= 5) {
+	                        cells.get(j).setText("100");
+	                    }
+	                    if (j == 6) {
+	                        cells.get(j).setText("  ");
+	                    }
+	                }
+	                if (i == 2) {
+
+	                    if (j == 1 || j <= 5 && j != 0) {
+	                        cells.get(j).setText("XX.XX");
+	                    }
+	                    if (j == 6) {
+	                        cells.get(j).setText("－");
+	                    }
+	                }
+	                if (i == 3) {
+
+	                    if (j == 1 || j <= 5 && j != 0) {
+	                        cells.get(j).setText("XX.XX");
+	                    }
+	                    if (j == 6) {
+	                        cells.get(j).setText("XX");
+	                    }
+	                }
+	                if (i == 4) {
+
+	                    if (j == 1 || j <= 5 && j != 0) {
+	                        cells.get(j).setText("XX.XX");
+	                    }
+	                    if (j == 6) {
+	                        cells.get(j).setText("XX");
+	                    }
+	                }
+	                if (i == 5) {
+
+	                    if (j == 1) {
+	                        cells.get(j).setText("0.21");
+	                    }
+	                    if (j == 2) {
+	                        cells.get(j).setText("0.24");
+	                    }
+	                    if (j == 3) {
+	                        cells.get(j).setText("0.20");
+	                    }
+	                    if (j == 4) {
+	                        cells.get(j).setText("0.17");
+	                    }
+	                    if (j == 5) {
+	                        cells.get(j).setText("0.18");
+	                    }
+	                    if (j == 6) {
+	                        cells.get(j).setText("1");
+	                    }
+	                }
+	                if (i == 6) {
+
+	                    if (j == 1 || j <= 5 && j != 0) {
+	                        cells.get(j).setText("XX.XX");
+	                    }
+	                    if (j == 6) {
+	                        cells.get(j).setText("XX");
+	                    }
+	                }
+	            }
+	        }
+	        if (i == 7) {
+	            for (int j2 = 0; j2 < 2; j2++) {
+	                if (j2 == 0) {
+	                    cell = cells.get(j2);
+
+	                    setProperties(cell, 1);
+
+	                    cell.setText("总得分ΣQ");
+	                }
+	                if (j2 == 1) {
+	                    cell = row.addNewTableCell();
+	                    // 单元格属性
+
+	                    setProperties(cell, 6);
+	                    cell.setText("XX.XX");
+	                }
+	            }
+	        }
+	    }
+	    XWPFParagraph para1 = doc.createParagraph();
+	    XWPFRun run2 = para1.createRun();
+	    setForm(run2, 5, " ", false, "000000");
+	    setForm(run2, 1, "5   节能与能源利用技术措施", false, "000000");
+	    setForm(run2, 1, "控制项", false, "000000");
+	    setForm(run2, 1, "5.1.3冷热源、输配系统和照明等各部分能耗应进行独立分项计量。", false,
+	            "000000");
+	    setForm(run2, 1, "自评得分：满足；", false, "000000");
+	    setForm(run2, 1, "技术措施：项目中热源、输配系统和照明系统各部分能耗进行独立分项计量。", false,
+	            "000000");
+	    setForm(run2, 0, "5.1.4各房间或场所的照明功率密度值不得高于现行国家标准《建筑照明设计", false,
+	            "000000");
+	    setForm(run2, 1, "标准》GB 50034中的现行值规定。", false, "000000");
+	    setForm(run2, 1, "自评得分：满足；", false, "000000");
+	    setForm(run2, 0, "技术措施：", false, "000000");
+	    setForm(run2, 1, "说明照明系统灯具类型、主要灯具型号和参数：", false, "FF0000");
+	    setForm(
+	            run2,
+	            1,
+	            "______________________________________________________________",
+	            false, "000000");
+	    setForm(run2, 2, "证明材料：照明功率密度计算书", false, "FF0000");
+	    setForm(run2, 1, "2评分项", false, "000000");
+	    setForm(run2, 1,
+	            "5.2.9走廊、楼梯间、门厅、大堂、大空间、地下停车场等场所的照明系统采取分区、定时、感应等节能控制措施。", false,
+	            "000000");
+	    setForm(run2, 1, "自评得分：X分；", false, "000000");
+	    setForm(run2, 1, "照明节能:说明建筑照明控制策略和节能措施：", false, "FF0000");
+	    setForm(
+	            run2,
+	            1,
+	            "______________________________________________________________",
+	            false, "000000");
+	    setForm(run2, 1,
+	            "5.2.10照明功率密度值达到现行国家标准《建筑照明设计标准》GB 50034中的目标值规定。", false,
+	            "000000");
+	    setForm(run2, 1, "自评得分：X分；", false, "000000");
+	    setForm(run2, 1, "技术措施：", false, "000000");
+	    setForm(run2, 1, "直接体现“满足”条的具体内容即可。", false, "FF0000");
+	    setForm(run2, 1, "证明材料：照度和照明功率密度值计算书", false, "000000");
+	    setForm(run2, 1, "5.2.11合理选用电梯和自动扶梯，并采取电梯群控、扶梯自动启停等节能控制措施。",
+	            false, "000000");
+	    setForm(run2, 1, "自评得分：X分；", false, "000000");
+	    setForm(run2, 1, "技术措施：", false, "000000");
+	    setForm(run2, 1, "项目不参评原因：________________________________。",
+	            false, "FF0000");
+	    setForm(run2, 1, "说明电梯和自动扶梯的节能控制措施：", false, "000000");
+	    setForm(
+	            run2,
+	            1,
+	            "______________________________________________________________",
+	            false, "000000");
+	    setForm(run2, 1, "5.2.12合理选用节能型电气设备。", false, "000000");
+	    setForm(run2, 1, "自评得分：X分；", false, "000000");
+	    setForm(run2, 1, "技术措施：", false, "000000");
+	    setForm(run2, 1, "简要说明配电变压器节能评价值及水泵、风机（及其电机）的能效等级：", false,
+	            "000000");
+	    setForm(
+	            run2,
+	            1,
+	            "______________________________________________________________",
+	            false, "000000");
+	    OutputStream os = new FileOutputStream("d:\\绿色建筑专篇说明--20180305-电气.doc");
+	    doc.write(os);
+	    os.close();
+	}
+
+	public static void setProperties(XWPFTableCell cell, int Width) {
+	    CTTcPr cellPr1 = cell.getCTTc().addNewTcPr();
+	    CTVerticalJc va1 = cellPr1.addNewVAlign();
+	    va1.setVal(STVerticalJc.CENTER);
+	    cellPr1.addNewTcW().setW(BigInteger.valueOf(1250 * Width));
+	}
+
+	public static void setForm(XWPFRun run, int changeLine, String content,Boolean isUnderline, String color) {
+	    // 是否添加下划线
+	    if (isUnderline) {
+	        run.setUnderline(UnderlinePatterns.WORDS);
+	    }
+	    run.setText(content);// 设置run的文本
+	    // 是否换行
+	    if (changeLine != 0) {
+	        // 换几行
+	        for (int i = 0; i < changeLine; i++) {
+	            run.addBreak();
+	        }
+	    }
+	    run.setColor(color);
+	    run.setTextPosition(5);
+	    run.setFontSize(10);
+	    run.setFontFamily("宋体");
+	}
+	
+	public static void setHeaderAndFooter(XWPFDocument document){
+		//页眉页脚部分
+	    CTSectPr sectPr = document.getDocument().getBody().addNewSectPr();
+	    XWPFHeaderFooterPolicy policy = new XWPFHeaderFooterPolicy(document, sectPr);
+
+	    //添加页眉
+	    CTP ctpHeader1 = CTP.Factory.newInstance();
+	    CTR ctrHeader1 = ctpHeader1.addNewR();
+	    CTText ctHeader1 = ctrHeader1.addNewT();
+	    String headerText1 = "北京市盈科律师事务所";
+	    ctHeader1.setStringValue(headerText1);
+	    
+	    CTP ctpHeader2 = CTP.Factory.newInstance();
+	    CTR ctrHeader2 = ctpHeader2.addNewR();
+	    CTText ctHeader2 = ctrHeader2.addNewT();
+	    String headerText2 = "北京盈天科地知识产权";
+	    ctHeader2.setStringValue(headerText2);
+
+	    XWPFParagraph headerParagraph1 = new XWPFParagraph(ctpHeader1, document);
+	    XWPFParagraph headerParagraph2 =document.createParagraph();
+	    //设置为右对齐
+	    headerParagraph1.setAlignment(ParagraphAlignment.RIGHT);
+	    headerParagraph2.setAlignment(ParagraphAlignment.RIGHT);
+//	    headerParagraph2.getRuns().get(0).setUnderline(UnderlinePatterns.WORDS);
+	    XWPFRun run = headerParagraph2.createRun();
+	    run.setText("北京盈天科地知识产权");
+	    run.setUnderline(UnderlinePatterns.SINGLE);
+	    
+	    XWPFParagraph[] parsHeader = new XWPFParagraph[2];
+	    parsHeader[0] = headerParagraph1;
+	    parsHeader[1] = headerParagraph2;
+	    policy.createHeader(XWPFHeaderFooterPolicy.DEFAULT, parsHeader);
+	    
+	  //run.setUnderline(UnderlinePatterns.WORDS);
+	    
+	    //添加页脚
+	    CTP ctpFooter = CTP.Factory.newInstance();
+	    CTR ctrFooter = ctpFooter.addNewR();
+	    CTText ctFooter = ctrFooter.addNewT();
+	    String footerText = "ctpFooter";
+	    ctFooter.setStringValue(footerText);
+	    XWPFParagraph footerParagraph = new XWPFParagraph(ctpFooter, document);
+	    
+	    
+	    footerParagraph.setAlignment(ParagraphAlignment.LEFT);
+	    XWPFParagraph[] parsFooter = new XWPFParagraph[1];
+	    parsFooter[0] = footerParagraph;
+	    policy.createFooter(XWPFHeaderFooterPolicy.DEFAULT, parsFooter);
+	}
+}

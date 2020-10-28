@@ -1,0 +1,143 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<zscript>					
+	import java.util.HashMap;
+	import java.util.Map;
+	import java.lang.Object;
+</zscript>
+<window id="addFile" title="新增文件" border="normal" width="600px"
+    apply="com.yewu.zscq.controller.AddWenJianController"
+    position="center,center" closable="true"
+    action="show: slideDown;hide: slideUp">
+    <vlayout>
+        <grid>
+            <columns>
+                <column hflex="1" label="" />
+                <column hflex="2" label="" align="center" />
+                <column hflex="1" label=""/>
+                <column hflex="2" label="" align="center" />
+            </columns>
+            <rows>
+                <row>
+                    <label value="案件号" width="150px" />
+                    <hlayout>
+                        <textbox id="ajh" width="150px" tabindex="1" constraint="no empty"/>
+                    </hlayout>
+                    <label value="商标名称" width="150px" />
+                    <textbox id="sbmc" width="150px" tabindex="2"  />
+                </row>
+                <row>
+                    <label value="商标类型" width="150px" />
+                    <hlayout>
+                        <textbox id="sblx" width="150px" tabindex="3" />
+                    </hlayout>
+                    <label value="商标号" width="150px" />
+                    <textbox id="sbh" width="150px" tabindex="4"  />
+                </row>
+                <row>
+                    <label value="文件名称" width="150px" />
+                    <hlayout>
+                        <textbox id="wjmc" width="150px" tabindex="5"/>
+                    </hlayout>
+                    <label value="代理人" width="150px" visible="false"/>
+                    <combobox id="dlr" buttonVisible="true" width="150px" readonly="true" visible="false">
+	             		<comboitem label="${each}">
+	             		</comboitem>
+	             	</combobox>
+                </row>
+                <row>
+                	<cell><label value="备注" width="150px" /></cell>
+                	<cell  colspan="3" align="center">
+                		<textbox id="remarks" width="400px" rows="3"></textbox>
+                	</cell>
+                </row>
+                <row>
+                	<cell>
+                	<button width="85px" id="attachBtn" sclass="attachBtn"
+                            iconSclass="z-icon-paperclip"
+                            upload="true,maxsize=35240" label="文档" onUpload="addItem()"/>
+                     </cell>
+                     <cell>
+                     	<checkbox id="cb" label="非标准文件"  style="fontsize:20"/>
+                     </cell>     
+                </row>
+                
+            </rows>
+        </grid>
+        <vlayout id="flist" hflex="1" sclass="fileList" />  
+        <button id="addBtn" hflex="1" label="保存" /> 
+    </vlayout>
+     <zscript><![CDATA[
+	org.zkoss.util.media.Media media;
+	Session session = Sessions.getCurrent(); 
+    void addItem() {
+        media = event.getMedia();
+        session.setAttribute("media",media);
+        Hlayout hl = new Hlayout();
+        hl.setSpacing("6px");
+        hl.setClass("newFile");
+        hl.appendChild(new Label(media.getName()));
+        String filename = media.getName();
+        String filetype = media.getFormat();
+        filename = filename.substring(0,filename.length()-filetype.length()-1);
+        //Messagebox.show(filename);
+        
+        String[] name_temp2 = filename.split("-");
+        
+        A rm = new A("remove");
+        rm.addEventListener(Events.ON_CLICK,new org.zkoss.zk.ui.event.EventListener(){
+            public void onEvent(Event event) throws Exception {
+                hl.detach();
+            }
+        });
+        //media.getByteData();
+        hl.appendChild(rm);
+        if(flist.getChildren().size()!=0){//如果已经选择了一个附件，则删除前一个附件，只保留最后一个附件
+	        flist.removeChild(flist.getChildren().get(0));
+        }    
+        flist.appendChild(hl);
+        if(!cb.isChecked()){//如果没选中复选框，则用文件信息填充输入信息
+	        //将文件名分割后赋值给输入框
+	        for(int i=0;i<name_temp2.length;i++){
+	        	if(i==0){
+	        		ajh.setValue(name_temp2[0]);
+	        	}else if(i==1){
+	        		sbmc.setValue(name_temp2[1]);
+	        	}else if(i==2){
+	        		sblx.setValue(name_temp2[2]);
+	        	}else if(i==3){
+	        		sbh.setValue(name_temp2[3]);
+	        	}else if(i==4){
+	        		wjmc.setValue(name_temp2[4]);
+	        	}
+	        }
+        }else{//从案件表中用，商标号查询出所有记录
+//        	Map<String, Object> arg1 = new HashMap<String, Object>();
+//    		arg1.put("sbh", name_temp2[3]);
+    		session.setAttribute("sbh",name_temp2[3]);
+    		Window window2 = (Window)Executions.createComponents(
+    	            "/jsp/zscq/wenjian/queryJxqd.zul", null, null);
+    		window2.doModal();
+    		
+    		wjmc.setValue(name_temp2[4]);//将文件中的文件名称写入对应输入框
+        }
+        
+        
+    }
+    void upLoad1(){
+    	Messagebox.show(String.valueOf(flist.getChildren().size()));
+    	 if(flist.getChildren().size()==0){
+    		 Messagebox.show("空");
+    		 //Messagebox.show(media.getName());
+    	 }else{
+    		 
+    		 Messagebox.show(media.getName());
+    		 
+    		 //通过media.getByteData()获得文件流，将文件流写成文件上传FTP
+    		 
+    	 }
+    	 
+    }
+    ]]></zscript>
+</window>
+</zk>

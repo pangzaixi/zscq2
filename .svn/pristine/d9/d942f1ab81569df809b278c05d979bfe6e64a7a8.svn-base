@@ -1,0 +1,77 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+
+<window id="stockcheckWin" title="盘库" border="normal" width="1000px" 
+    apply="com.pjgl.sockCheck.controller.StockCheckController"
+    position="center,center" closable="true"
+    action="show: slideDown;hide: slideUp">
+<radiogroup id="sv1"/>
+	<!-- 查询条件区 -->
+
+	<separator></separator>
+    <!-- 按钮区 -->
+    <hlayout>
+    	
+    		盘库备注<textbox id="pkRemarks"  width="150px" rows="3"/>
+    	<vlayout>
+		    <hlayout> 
+			    	配件：<textbox id="pjName" width="150px"/>规格：<textbox id="pjGG"  width="150px"/>
+		   	</hlayout>
+		   	<hlayout > 
+		   		数量：<decimalbox id="totalNum" format="######.##" width="150px"   onChange="cal()"  constraint="no empty"/>
+		   		金额：<decimalbox id="amounts" format="######.##" width="150px"   onChange="cal()"  constraint="no empty"/>
+		    	单价：<decimalbox id="averagePrice" readonly="true"/>
+		    	<button height="20px" width="60px"  label="保存" id="sabeButton"/>
+		    	<button height="20px" width="60px"  label="重新盘库" id="clearButton"/>
+		   	</hlayout>
+	   	</vlayout>
+   	</hlayout>   
+   	<!-- 数据表格区 -->
+   	<separator></separator>
+<div>
+	<listbox id="stockcheckListbox" emptyMessage="未查找到记录">
+        <listhead>
+          <listheader label="id" align="center" visible="false"/>
+          <listheader label="配件名称" align="center" width="100PX"/>
+          <listheader label="规格型号" align="center" width="100PX"/>
+          <listheader label="单位" align="center" width="100PX"/>
+          <listheader label="当前库存量" align="center" width="100PX"/>
+          <listheader label="库存金额" align="center" width="100PX"/>
+          <listheader label="单价" align="center" width="100PX"/>
+        </listhead>
+        <template name="model">
+            	<listitem id="${each.id}" value="${each}" >
+            	<listcell label="${each.id}"></listcell>
+                <listcell label="${each.pjname}"></listcell>
+                <listcell label="${each.pjgg}"></listcell>
+                <listcell label="${each.pjdw}"></listcell>
+                <listcell label="${each.totalNum}"></listcell>
+                <listcell label="${each.amounts}"></listcell>
+                <listcell label="${each.ageragePrice}"></listcell>
+            </listitem>
+        </template>
+    </listbox>
+<separator></separator>
+<hlayout>
+	<textbox id="erweima" value=""></textbox><label style="color:red;text-decoration:underline" value="扫码前，确保光标处于左侧输入框中"/>
+</hlayout>
+<separator></separator>
+<textbox id="remarks" width="1000px" rows="5" readonly="true"></textbox>
+</div> 
+<zscript><![CDATA[
+erweima.focus();
+	void cal() {
+		if(stockcheckListbox.getSelectedItem() != null){
+			java.math.BigDecimal num = totalNum.getValue();	
+			java.math.BigDecimal amounts = amounts.getValue();
+	    	if(num != null && amounts != null){
+	    		averagePrice.setValue(amounts.divide(num,2,java.math.RoundingMode.HALF_EVEN));
+	    	}	
+		}else{
+			Messagebox.show("请选择库存记录","注意", Messagebox.OK, Messagebox.EXCLAMATION);
+		}
+		
+    }
+	]]></zscript>
+</window>
+</zk>

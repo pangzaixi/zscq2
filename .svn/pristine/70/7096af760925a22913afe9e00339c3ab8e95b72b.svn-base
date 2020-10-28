@@ -1,0 +1,18 @@
+<zk xmlns:x="xhtml" xmlns:w="client" xmlns:ca="client/attribute">	
+	<!-- Client Programming : JQuery Zoomer Gallery -->
+	<style src="/css/image/widgets/effects/image_zoomer/styles.css"/>
+<script src="/css/image/widgets/effects/image_zoomer/ext/TweenLite.min.js"/>
+<script src="/css/image/widgets/effects/image_zoomer/ext/TimelineLite.min.js"/>
+<script src="/css/image/widgets/effects/image_zoomer/ext/CSSPlugin.min.js"/>
+<script src="/css/image/widgets/effects/image_zoomer/ext/EasePack.min.js"/>
+<script src="/css/image/widgets/effects/image_zoomer/animations.js"/>
+
+	<!-- uses defined animations flyInChildren, zoomIn, zoomOut, spinOnce from animations.js -->
+	<div width="700px" height="350px" sclass="gallery" w:onAfterSize="flyInChildren.call(this.$n());">
+		
+			<div sclass="imageDiv" w:onBind="jq(this).hover(zoomIn, zoomOut);">
+				<image src="/jsp/demo/image/widgets/effects/image_zoomer/img/i_28_d.png" width="100%" height="100%"/>				
+			</div>
+		
+	</div>			
+</zk>

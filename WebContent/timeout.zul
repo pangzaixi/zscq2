@@ -1,0 +1,10 @@
+<window width="80%" title="服务器连接超时" border="normal">
+<zscript><![CDATA[ 
+Executions.sendRedirect("./");
+
+			
+			]]></zscript>
+	<vbox>
+	服务器连接超时，请重新登录
+	</vbox>
+</window>

@@ -1,0 +1,118 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<zscript>					
+	import java.util.HashMap;
+	import java.util.Map;
+	import java.lang.Object;
+	import com.pjgl.cght.bean.Cght;
+	import com.yewu.zscq.bean.User;
+</zscript>	
+<zscript><![CDATA[ 
+			User user = (User)session.getAttribute("user");
+			String roles = user.getRoles();//用户等级
+			Boolean state;
+			int roleState;
+			if(roles.contains("审批采购合同")){
+				state = true;
+				roleState = 1;
+			}else{
+				state = false;
+				roleState = 0;
+			}
+			]]></zscript>
+			
+<window id="cghtwin"  border="none" height="800px" apply="com.pjgl.cght.controller.CghtController"  >
+<radiogroup id="sv1"/>
+	<!-- 查询条件区 -->
+     <hlayout> 
+        <label>合同编号</label>
+        <separator></separator>
+        <textbox id="htbh" />
+        <label>签订日期</label>
+        <datebox id="qdrq1"  />
+        <label>-</label>
+        <separator></separator>
+        <datebox id="qdrq2"  />
+        <label value="状态"/>
+        <combobox id="state" buttonVisible="true"  width="160px" >
+  		<!-- <template name="model"> -->
+	     <comboitem label="待审核" value="1" ></comboitem>
+	     <comboitem label="已审核" value="0" ></comboitem>
+	    <!-- </template> -->
+        </combobox>
+        <intbox visible="false" id="role" value="${roleState }"></intbox>
+    </hlayout>
+    <separator></separator>
+    <!-- 按钮区 -->
+    <hlayout spacing="50px"> 
+    	<div>
+	    	<button height="20px" width="60px"  label="查询" id="queryButton"/>
+	    	<button height="20px" width="60px"  label="清空" id="clearButton"/>
+   	    	<button height="20px" width="60px"  label="新增" id="addButton"/>
+   	    	<button height="20px" width="60px"  label="编辑" id="editButton"/>
+   	    	<button height="20px" width="60px"  label="删除" id="delButton"/>
+   	    	<button height="20px" width="60px"  label="审批" id="checkButton" visible="${state}"/>
+   	    	 <!-- <button height="20px" width="100px"  label="添加配件" id="addPjButton"/>
+   	    	<button height="20px" width="100px"  label="配件列表" id="queryPjButton"/>  -->
+   	    </div>
+   	</hlayout>   
+   	<!-- 数据表格区 -->
+   	<separator></separator>
+<div>
+	<listbox id="cghtbox" emptyMessage="未查找到记录"  >
+        <listhead>
+          <listheader label="id" align="center" visible="false"/>
+          <listheader label="合同编号" align="center" width="100PX"/>
+          <listheader label="签订日期" align="center" width="100PX"/>
+          <listheader label="总金额" align="center" width="100PX"/>
+          <listheader label="经办人" align="center" width="100PX"/>
+          <listheader label="供应商" align="center" width="100PX"/>
+          <listheader label="供应商电话" align="center" width="100PX"/>
+          <listheader label="状态" align="center" width="100PX"/>
+          <listheader label="备注" align="center" width="150PX"/>
+          <listheader label="操作" align="center" width="100PX"/>
+        </listhead>
+        <template name="model">
+            	<listitem id="${each.id}" value="${each}">
+            	<listcell label="${each.id}"></listcell>
+            	<listcell label="${each.htbh}"></listcell>
+                <listcell label="${each.qdrqStr}"></listcell>
+                <listcell label="${each.zje}"></listcell>
+                <listcell label="${each.userName}"></listcell>
+                <listcell label="${each.supplierName}"></listcell>
+                <listcell label="${each.supplierMobile}" ></listcell>
+                <listcell label="${each.stateStr}" ></listcell>
+                <listcell label="${each.remarks}"></listcell>
+                <listcell>
+                	<label style="color:red;text-decoration:underline" onClick="addPj()" visible="${each.state }">添加配件</label>
+   	    			<label style="color:red;text-decoration:underline" onClick="queryPj()">配件列表</label>
+   	    		</listcell>
+            </listitem>
+        </template>
+    </listbox>
+<paging id="paging" pageSize="10" ></paging>
+</div>
+<zscript><![CDATA[
+void addPj() {
+	Map arg1 = new HashMap();
+	Cght cght = (Cght)cghtbox.getSelectedItem().getValue();
+		arg1.put("cght", cght);
+		
+		Window window = (Window)Executions.createComponents(
+	            "/jsp/pjgl/cght/sub/selectPj.zul", null, arg1);
+		window.doModal();
+}
+
+void queryPj() {
+	Map arg1 = new HashMap();
+	Cght cght = (Cght)cghtbox.getSelectedItem().getValue();
+		arg1.put("cght", cght);
+		
+		Window window = (Window)Executions.createComponents(
+	            "/jsp/pjgl/cght/sub/cghtSub.zul", null, arg1);
+		window.doModal();
+}
+
+]]></zscript>
+</window>
+</zk>

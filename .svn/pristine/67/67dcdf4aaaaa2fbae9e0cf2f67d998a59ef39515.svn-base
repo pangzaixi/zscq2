@@ -1,0 +1,79 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<window id="selectPjWin" title="配件详情" border="normal" width="1000px" 
+    apply="com.pjgl.instock.controller.InStockController"
+    position="center,center" closable="true"
+    action="show: slideDown;hide: slideUp">
+    
+<radiogroup id="sv1"/>
+	<!-- 查询条件区 -->
+     <!-- <hlayout> 
+        <label>配件名称</label>
+        <separator></separator>
+        <textbox id="name"  />
+        <label>入库日期</label>
+        <separator></separator>
+        <datebox id="startDate"  />
+        <label>-</label>
+        <datebox id="endDate"  />
+        <label visible="${level1}">所属公司</label>
+        <separator></separator>
+         <combobox id="company" buttonVisible="true"  width="160px" visible = "false">
+       		<template name="model">
+    		<comboitem label="${each.companyName}" context="${each.id}" ></comboitem>
+    		</template>
+    	</combobox>
+    </hlayout>
+    <separator></separator> -->
+    <!-- 按钮区 -->
+    <!-- <hlayout spacing="50px"> 
+    	<div>
+	    	<button height="20px" width="60px"  label="查询" id="queryDetailsButton"/>
+	    	<button height="20px" width="60px"  label="清空" id="clearDetailsButton"/>
+   	    </div>
+   	</hlayout>   
+   	数据表格区
+   	<separator></separator> -->
+<div>
+    <grid id="detailsbox" >
+    <!-- <auxhead sclass="category-center">
+        <auxheader label="Healthy Food List" colspan="9" rowspan="1" />
+    </auxhead> -->
+    <columns>
+        <column  width="160px">配件名称</column>
+        <column >配件规格</column>
+        <column >单位</column>
+        <column >入库数量</column>
+        <column >平均单价</column>
+        <column >入库金额</column>
+        <column >入库日期</column>
+        <column >操作人</column>
+        <column >入库类型</column>
+        <column >备注</column>
+    </columns>
+    <template name="model">
+        <row >
+            <label value="${each.name}" ></label>
+            <label value="${each.spec}"></label>
+            <label value="${each.unit}"></label>
+            <label value="${each.totalNum}"></label>
+            <label value="${each.averagePrice}"></label>
+            <label value="${each.amounts}"></label>
+            <label value="${each.cerateDateStr}"></label>
+            <label value="${each.creatorName}"></label>
+            <label value="${each.type}"></label>
+            <label value="${each.remarks}"></label>
+        </row>
+    </template>
+    <foot>
+        <footer  span="10" id="footerDetails"    class="footer_right"></footer>
+    </foot>
+	</grid>    
+<paging id="pagingDetails" pageSize="10" ></paging>
+</div>
+    <zscript><![CDATA[
+	 
+    
+    ]]></zscript>
+</window>
+</zk>

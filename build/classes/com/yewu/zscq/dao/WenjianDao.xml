@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.yewu.zscq.dao.WenjianDao">
+    <select id="getName" resultType="String">
+        select "a" from dual
+    </select>
+    
+    
+    <!-- 获取文件记录 -->
+    <select id="selectWenjian" parameterType="map" resultType="com.yewu.zscq.bean.WenJian">
+        sELECT * FROM zscq_sb 
+	  
+        <where>
+        	status=1
+        <if test="ajh != null and ajh != ''">
+		    AND ajh= #{ajh}
+		</if>
+		
+		<if test="sbmc != null and sbmc != ''">
+		    AND sbmc= #{sbmc}
+		</if>
+		<if test="sblx != null and sblx != ''">
+		    AND sblx= #{sblx}
+		</if>
+		<if test="sbh != null and sbh != ''">
+		    AND sbh= #{sbh}
+		</if>
+		<if test="wjmc != null and wjmc != ''">
+		    AND wjmc like CONCAT('%',#{wjmc},'%')
+		</if>
+		<if test="dlr != null and dlr != ''">
+		    AND dlr= #{dlr}
+		</if>
+		<if test="user_name != null and user_name != ''">
+		    AND creater= #{user_name}
+		</if>
+		<if test="lrrq_q1 != null and lrrq_q1 != ''">
+		    AND inputdate   <![CDATA[ >= ]]> DATE_FORMAT(#{lrrq_q1},'%Y-%m-%d')
+		</if>
+		<if test="lrrq_q2 != null and lrrq_q2 != ''">
+		    AND inputdate  <![CDATA[ <= ]]> DATE_FORMAT(#{lrrq_q2},'%Y-%m-%d')
+		</if>
+		</where>
+		 order by inputdate desc 
+		limit #{begin},#{end}
+    </select>
+<!-- 获取文件记录 总数-->
+<select id="selectWenjian_count" parameterType="map" resultType="int">
+    sELECT count(1) FROM zscq_sb 
+    <where>
+    	status=1
+        <if test="ajh != null and ajh != ''">
+		    AND ajh= #{ajh}
+		</if>
+		
+		<if test="sbmc != null and sbmc != ''">
+		    AND sbmc= #{sbmc}
+		</if>
+		<if test="sblx != null and sblx != ''">
+		    AND sblx= #{sblx}
+		</if>
+		<if test="sbh != null and sbh != ''">
+		    AND sbh= #{sbh}
+		</if>
+		<if test="wjmc != null and wjmc != ''">
+		    AND wjmc like CONCAT('%',#{wjmc},'%')
+		</if>
+		<if test="dlr != null and dlr != ''">
+		    AND dlr= #{dlr}
+		</if>
+		<if test="user_name != null and user_name != ''">
+		    AND creater= #{user_name}
+		</if>
+		
+		<if test="lrrq_q1 != null and lrrq_q1 != ''">
+		    AND inputdate   <![CDATA[ >= ]]> DATE_FORMAT(#{lrrq_q1},'%Y-%m-%d')
+		</if>
+		<if test="lrrq_q2 != null and lrrq_q2 != ''">
+		     AND inputdate  <![CDATA[ <= ]]> DATE_FORMAT(#{lrrq_q2},'%Y-%m-%d')
+		</if>
+		</where>
+</select>
+
+<!-- 添加文件记录 -->
+<insert id="addWenjian" parameterType="map" > 
+  insert into zscq_sb(ajh, sbmc,sblx,sbh,wjmc,dlr,creater,inputdate,path,filename,remarks) 
+  values(#{ajh}, #{sbmc}, #{sblx},#{sbh}, #{wjmc}, #{dlr}, #{creater}, #{inputdate}, #{path}, #{filename}, #{remarks})
+</insert>
+
+ 
+    <!-- 根据用户名密码查询用户信息 -->
+    <select id="selectUser" parameterType="map" resultType="com.yewu.zscq.bean.User">
+        sELECT * FROM zscq_user 
+	  
+        <where>
+        <if test="usertb != null and usertb != ''">
+		    AND login_name= #{usertb}
+		    and status='1'
+		</if>
+		
+		<if test="pwdtb != null and pwdtb != ''">
+		    AND login_pwd= #{pwdtb}
+		</if>
+		
+		</where>
+		
+    </select>
+    
+<!-- 查询账号对应的角色 -->
+<select id="selectRoles" parameterType="map" resultType="String">
+       sELECT role FROM zscq_user_role where login_name= #{login_name}
+</select>    
+<!-- 增加log信息 -->
+<insert id="addLog" parameterType="map" > 
+  insert into zscq_log(operator, operator_name,operate_time,remarks) 
+  values(#{operator}, #{operator_name}, #{operate_time},#{remarks})
+</insert>
+<!-- 删除（隐藏）文件 -->
+<update id="deleteWenjian" parameterType="String">
+        update zscq_sb set status = 0
+        where id=#{id}
+</update>
+
+
+ <select id="selectDlr" parameterType="map" resultType="String">
+        sELECT dlrname FROM zscq_dlr 
+        
+ </select>       
+</mapper>

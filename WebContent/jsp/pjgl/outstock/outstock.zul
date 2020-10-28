@@ -1,0 +1,106 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<style src="/css/grid/style.css" />
+<zscript>
+	import com.yewu.zscq.bean.User;
+</zscript>	
+
+<zscript><![CDATA[ 	
+	User user = (User)session.getAttribute("user");
+	String level = user.getLevel();//用户等级
+	Boolean level1;
+	if("1".equals(level)){
+		level1 = true;
+	}
+]]></zscript>
+
+<window id="outstockwin"  border="none" height="800px" apply="com.pjgl.stockUse.controller.OutStockController"  >
+<radiogroup id="sv1"/>
+	<!-- 查询条件区 -->
+     <hlayout> 
+        <label>配件名称</label>
+        <separator></separator>
+        <textbox id="name"/>
+        <label>入库日期</label>
+        <separator></separator>
+        <datebox id="startDate"  format="yyyy-MM-dd"/>
+        <label>-</label>
+        <datebox id="endDate"  format="yyyy-MM-dd"/>
+        <label>车牌号</label>
+        <separator></separator>
+        <textbox id="plateNum"/>
+        <label>驾驶员</label>
+        <separator></separator>
+        <textbox id="driver"/>
+        <label visible="${level1}">所属公司</label>
+        <separator></separator>
+         <combobox id="company" buttonVisible="true"  width="160px">
+       		<template name="model">
+    		<comboitem label="${each.companyName}" context="${each.id}" ></comboitem>
+    		</template>
+    	</combobox>
+    	
+    </hlayout>
+    <separator></separator>
+    <!-- 按钮区 -->
+    <hlayout spacing="50px"> 
+    	<div>
+	    	<button height="20px" width="60px"  label="查询" id="queryButton"/>
+	    	<button height="20px" width="60px"  label="清空" id="clearButton"/>
+   	    </div>
+   	</hlayout>   
+   	<!-- 数据表格区 -->
+   	<separator></separator>
+<div>
+<grid id="outstockbox" >
+    <!-- <auxhead sclass="category-center">
+        <auxheader label="领用统计" colspan="9" rowspan="1" />
+    </auxhead> -->
+    <columns>
+        <column hflex="1" visible="true">操作</column>
+        <column hflex="1">配件名称</column>
+        <column hflex="1">配件规格</column>
+        <column hflex="1">单位</column>
+        <column hflex="1">领用数量</column>
+        <column hflex="1">平均单价</column>
+        <column hflex="1">总金额</column>
+    </columns>
+    <template name="model">
+        <row >
+        	<label style="color:red;text-decoration:underline" context="${each.pjid}" onDoubleClick="details(self.getContext())" visible="true">详情</label>
+            <label value="${each.name}" ></label>
+            <label value="${each.spec}"></label>
+            <label value="${each.unit}"></label>
+            <label value="${each.totalNum}"></label>
+            <label value="${each.averagePrice}"></label>
+            <label value="${each.amounts}"></label>
+        </row>
+    </template>
+    <foot>
+        <footer  span="8" id="footercategory"    class="footer_right"></footer>
+    </foot>
+</grid>    
+<paging id="paging" pageSize="10" ></paging>
+</div>
+<zscript>
+	void details(String pjid){
+		Map arg1 = new HashMap();
+		arg1.put("pjid", pjid);
+		
+		if(company.getSelectedItem() == null){
+		    company.setSelectedIndex(0);
+		}
+		arg1.put("companyid", company.getSelectedItem().getContext());
+		arg1.put("date1", startDate.getValue());
+		arg1.put("date2", endDate.getValue());
+		arg1.put("plateNum", plateNum.getValue());
+		arg1.put("driver", driver.getValue());
+		Window window = (Window)Executions.createComponents(
+	            "/jsp/pjgl/outstock/stockDetails.zul", null, arg1);
+		window.doModal();
+		
+	}
+	
+</zscript> 
+</window>
+</zk>

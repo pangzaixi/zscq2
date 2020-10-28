@@ -1,0 +1,44 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<window  id ="spWin" title="审批" border="normal"  width="800px" height="250px"
+	position="center,center" closable="true"
+	apply="com.pjgl.lysq.controller.LyspController">
+<radiogroup id="sv1"/>
+<grid>
+      <columns>
+          <column hflex="1" label="" />
+          <column hflex="2" label="" align="center" />
+          
+    </columns>
+      <rows>
+          <row>
+             <label value="审批意见" width="150px" />
+             <hlayout>
+             	<radio id="ra1" label="同意" radiogroup="sv1" value="同意"/> 
+        		<radio id="ra2" label="拒绝" radiogroup="sv1" value="拒绝"/>
+             </hlayout>    
+          </row>
+          <row>
+          	<cell><label value="备注" width="150px" /></cell>
+          	<cell   align="center">
+          		<textbox id="remarks" width="400px" rows="3"></textbox>
+          	</cell>
+          </row>
+          
+          <row>
+          	<cell colspan="2" align="center">
+          		<button id="saveBtn" label="保存" width="100px" />    
+				<button id="closeBtn" label="关闭" width="100px" onClick="closeWin()"/>            	
+          	</cell>
+          </row>
+          
+      </rows>
+  </grid>
+<zscript><![CDATA[
+	 
+    void closeWin() {
+    	spWin.detach();//关闭窗口	
+    }	
+]]></zscript>	
+</window>
+</zk>

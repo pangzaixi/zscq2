@@ -1,0 +1,148 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<zscript>					
+	import com.yewu.hetong.caigou.gtcg.bean.GangtiecaigouhetongMain;
+	import com.yewu.zscq.bean.User;
+	import com.system.utils.LogManage;
+	import com.yewu.zscq.service.WenjianService;
+	import org.zkoss.zkplus.spring.SpringUtil;
+</zscript>	
+<zscript><![CDATA[ 
+			User user_login = (User)session.getAttribute("user");
+			String level = user_login.getLevel();//用户等级
+			Boolean level3;//是否是浏览账号
+			if("3".equals(level)){
+				level3 = false;
+			}else{
+				level3 = true;	
+			}
+			Boolean level1;//是否是管理账号
+			if("1".equals(level)){
+				level1 = true;
+			}else{
+				level1 = false;	
+			}
+			
+			if(user_login != null){//该条件使得，如果用户没有登录，则返回登陆界面
+				
+				
+				
+			}
+			
+			]]></zscript>			
+<window id="sb"  border="none" height="800px" apply="com.yewu.zscq.controller.WenjianContorller"  >
+
+     <hlayout > 
+            <vlayout>
+	            <label>案件号</label><separator/>
+                <label>商标名称</label>
+            </vlayout>
+            <vlayout>
+                <textbox id="ajh"/>
+                <textbox id="sbmc" />
+            </vlayout>
+            <vlayout>
+	            <label>商标类别</label><separator/>
+                <label>商标号</label>
+            </vlayout>
+            <vlayout>
+                <intbox id="sblx"/>
+                <intbox id="sbh"/>
+            </vlayout>
+            <vlayout>
+	            <label>文件名称</label><separator/>
+                <label>代理人</label>
+            </vlayout>
+            <vlayout>
+                <textbox id="wjmc"/>
+               <!--   <textbox id="dlr" />-->
+               <combobox id="dlr" buttonVisible="true"  width="160px">
+             		<comboitem label="${each}"> 
+             		</comboitem>
+             	</combobox>
+            </vlayout>
+            
+            <vlayout>
+	            <label>录入日期</label><separator/>
+                <label>至</label>
+            </vlayout>
+            <vlayout>
+                <datebox id="lrrq_q1"  />
+                <datebox id="lrrq_q2"  />
+            </vlayout>
+    </hlayout>
+    <separator></separator>
+    <hlayout spacing="50px"> 
+    	<div>
+	    	<button height="20px" width="60px"  label="查询" id="queryButton"/>
+	    	<button height="20px" width="60px"  label="清空" id="clearButton"/>
+   	    	<button height="20px" width="60px"  label="新增" id="addButton" visible="${level3}"/>
+   	    	<button height="20px" width="60px"  label="删除" id="delButton" visible="${level1}"/>
+   	    	<button height="20px" width="60px"  label="下载" id="downButton" visible="false" />
+   	    	<button height="20px" width="60px"  label="测试" id="testButton" visible="false"/>
+   	    	<button height="20px" width="60px"  label="说明" id="shuoming" onClick="shuoming()"/>
+   	    </div>
+   	</hlayout>    
+  
+
+
+<separator></separator>
+<div>
+
+	<listbox id="listbox" emptyMessage="未查找到记录"  >
+        <listhead>
+            <listheader label="id" align="center" visible="false" />
+          <listheader label="案件号" align="center"/>
+          <listheader label="商标名称" align="center" />
+          <listheader label="商标类别" align="center" />
+          <listheader label="商标号" align="center" />
+          <listheader label="文件名称" align="center"/>
+          <listheader label="录入人" align="center"/>
+          <listheader label="录入时间" align="center"/>
+          <listheader label="备注" align="center"/>
+        </listhead>
+        <template name="model">
+            <listitem id="${each.id}" value="${each}">
+                <listcell label="${each.id}"></listcell>
+                <listcell label="${each.ajh}"></listcell>
+                <listcell label="${each.sbmc}"></listcell>
+                <listcell label="${each.sblx}"></listcell>
+                <listcell label="${each.sbh}"></listcell>
+                <listcell label="${each.wjmc}"  context="${each.path}" style="color:red;text-decoration:underline" onDoubleClick ="downLoad(self.getContext())" ></listcell>
+                <listcell label="${each.creater}"></listcell>
+                <listcell label="${each.inputdate}"></listcell>
+                <listcell label="${each.remarks}"></listcell>
+            </listitem>
+        </template>
+    </listbox>
+<paging id="paging" pageSize="10" ></paging>
+</div>
+<zscript><![CDATA[
+	 
+    void downLoad(String path) {
+    	try{
+    		
+    		LogManage logManage = new LogManage();
+    		String[] temp = path.split("/");
+			 String remarks = "下载文件"+temp[temp.length-1];
+			 User user = (User)session.getAttribute("user");
+			 logManage.addLog(remarks,user);
+			
+			Filedownload.save(path, null);
+
+    	}catch (Exception e){
+    		Messagebox.show("文件下载失败");
+    	}
+    }
+    
+    void shuoming(){
+    	Messagebox.show("将要上传的文件，如果缺少信息，例如缺少案件号等，这种情形的文件定义为非标准文件，"+
+    "此时需要保证文件名的最后第二项为商标号，最后一项信息为文件名称，选中文件按钮右侧的非标文件复选框，"+
+    			"然后再选择文件，此时将从案件查询模块中根据商标号查询已经定义的案件，选中对应的案件后点击确定按钮");
+    }
+    
+]]></zscript>
+    
+  
+</window>
+</zk>

@@ -1,0 +1,53 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<window id="zzjgwin"  border="none" height="800px" apply="com.system.zzjg.controller.ZzjgController"  >
+<radiogroup id="sv1"/>
+	<!-- 查询条件区 -->
+     <hlayout> 
+            <vlayout style="border:1px">
+	            
+                <label>部门名称</label>
+                
+            </vlayout>
+            <vlayout style="border:1px">
+                <div><textbox id="department"/></div>
+            </vlayout>
+           
+    </hlayout>
+    <separator></separator>
+    <!-- 按钮区 -->
+    <hlayout spacing="50px"> 
+    	<div>
+	    	<button height="20px" width="60px"  label="查询" id="queryButton"/>
+	    	<button height="20px" width="60px"  label="清空" id="clearButton"/>
+   	    	<button height="20px" width="60px"  label="新增" id="addButton"/>
+   	    	<button height="20px" width="60px"  label="编辑" id="editButton"/>
+   	    </div>
+   	</hlayout>   
+   	<!-- 数据表格区 -->
+   	<separator></separator>
+<div>
+	<listbox id="listbox" emptyMessage="未查找到记录"  >
+        <listhead>
+          <listheader label="id" align="center" visible="false"/>
+          <listheader label="部门名称" align="center" width="100PX"/>
+          <listheader label="负责人" align="center" width="150PX"/>
+          <listheader label="电话" align="center" width="150PX"/>
+          <listheader label="地址" align="center" width="50PX"/>
+          <listheader label="备注" align="center" width="150PX"/>
+        </listhead>
+        <template name="model">
+            	<listitem id="${each.id}" value="${each}">
+            	<listcell label="${each.id}"></listcell>
+                <listcell label="${each.department}"></listcell>
+                <listcell label="${each.manager}"></listcell>
+                <listcell label="${each.phone}"></listcell>
+                <listcell label="${each.address}"></listcell>
+                <listcell label="${each.remarks}"></listcell>
+            </listitem>
+        </template>
+    </listbox>
+<paging id="paging" pageSize="10" ></paging>
+</div> 
+</window>
+</zk>

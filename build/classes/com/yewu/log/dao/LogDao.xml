@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.yewu.log.dao.LogDao">
+
+    
+    <!-- 获取日志记录 -->
+    <select id="selectLog" parameterType="map" resultType="com.yewu.log.bean.Log">
+        sELECT * FROM zscq_log 
+	  
+        <where>
+        <if test="operator_name != null and operator_name != ''">
+		    AND operator_name= #{operator_name}
+		</if>
+		<if test="fl != null and fl != ''">
+		    AND fl= #{fl}
+		</if>
+		<if test="rq_q1 != null and rq_q1 != ''">
+		    AND operate_time   <![CDATA[ >= ]]> DATE_FORMAT(#{rq_q1},'%Y-%m-%d')
+		</if>
+		<if test="rq_q2 != null and rq_q2 != ''">
+		    AND operate_time  <![CDATA[ < ]]> DATE_FORMAT(#{rq_q2},'%Y-%m-%d')
+		</if>
+		</where>
+		 order by operate_time desc 
+		limit #{begin},#{end}
+    </select>
+<!-- 获取日志记录 总数-->
+<select id="selectLog_count" parameterType="map" resultType="int">
+    sELECT count(1) FROM zscq_log 
+    <where>
+        <if test="operator_name != null and operator_name != ''">
+		    AND operator_name= #{operator_name}
+		</if>
+		<if test="fl != null and fl != ''">
+		    AND fl= #{fl}
+		</if>
+		<if test="rq_q1 != null and rq_q1 != ''">
+		    AND operate_time   <![CDATA[ >= ]]> DATE_FORMAT(#{rq_q1},'%Y-%m-%d')
+		</if>
+		<if test="rq_q2 != null and rq_q2 != ''">
+		    AND operate_time  <![CDATA[ < ]]> DATE_FORMAT(#{rq_q2},'%Y-%m-%d')
+		</if>
+		</where>
+</select>
+<!-- 获取所有产生日志的用户名称 -->
+<select id="getAllName" parameterType="map" resultType="com.yewu.log.bean.Log">
+        sELECT distinct operator_name FROM zscq_log 
+	  
+        <where>
+        <if test="operator_name != null and operator_name != ''">
+		    AND operator_name= #{operator_name}
+		</if>
+		<if test="operator_name3 != null and operator_name3 != ''">
+		    AND operator_name= #{operator_name3}
+		</if>
+		
+		</where>
+		
+    </select>
+    
+<!-- 增加log信息 -->
+<insert id="addLog" parameterType="map" > 
+  insert into zscq_log(operator, operator_name,operate_time,remarks,fl) 
+  values(#{operator}, #{operator_name}, #{operate_time},#{remarks},#{fl})
+</insert>    
+</mapper>

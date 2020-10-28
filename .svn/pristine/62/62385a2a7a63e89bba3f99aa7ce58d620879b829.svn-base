@@ -1,0 +1,58 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<window id="addLysqWin" title="新增申领" border="normal" width="800px" height="250px"
+    apply="com.pjgl.lysq.controller.AddLysqController"
+    position="center,center" closable="true"
+    action="show: slideDown;hide: slideUp">
+    
+<vlayout>
+        <grid>
+            <columns>
+                <column hflex="1" label="" />
+                <column hflex="2" label="" align="center" />
+                <column hflex="1" label=""/>
+                <column hflex="2" label="" align="center" />
+                <column hflex="1" label=""/>
+                <column hflex="2" label="" align="center" />
+          </columns>
+            <rows>
+                <row>
+                   <label value="经办人" width="150px" />
+                     <hlayout>
+                        <combobox id="jbr" buttonVisible="true"  width="160px">
+			       		 <template name="model">
+			    		       <comboitem label="${each.user_name}" value="${each.id}"></comboitem>
+			    		</template>
+			    	    </combobox>
+                    </hlayout>
+                    <label value="领用日期" width="150px" />
+                    <datebox id="lyrq" width="150px"  tabindex="2"/>  
+                </row>
+                <row>
+                	<cell><label value="备注" width="150px" /></cell>
+                	<cell  colspan="3" align="center">
+                		<textbox id="remarks" width="400px" rows="3"></textbox>
+                	</cell>
+                </row>
+                
+                <row>
+                	<cell colspan="6" align="center">
+                		<button id="addBtn" label="保存" width="100px" />    
+						<button id="closeBtn" label="关闭" width="100px" onClick="closeWin()"/>            	
+                	</cell>
+                </row>
+                
+            </rows>
+        </grid>
+         
+    </vlayout>
+    <zscript><![CDATA[
+	 
+    void closeWin() {
+    	addLysqWin.detach();//关闭窗口	
+    }	
+    	]]></zscript>	    
+    
+
+</window>
+</zk>

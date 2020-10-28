@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.system.os.dao.OsServiceDao">
+    
+    <!-- 获取钢铁采购合同主表数据 -->
+    <select id="selectCaigouHeTongMain" parameterType="map" resultType="com.system.os.bean.OsSbcx">
+    	<choose>
+                <when test="cph_q != null and cph_q !=''">
+                    select p.id,sim_num,dtuphone_num,dev_type,platenum from ag_machine_plough p left join ag_dp_dev d  on  d.dtuphone_num = p.dtuphonenum
+                </when>
+                <otherwise>
+                    select d.id,sim_num,dtuphone_num,dev_type,platenum from ag_dp_dev d left join ag_machine_plough p on d.dtuphone_num = p.dtuphonenum
+                </otherwise>
+        </choose>
+    	
+        
+        <where>
+        <if test="sbh_q != null and sbh_q != ''"> 
+		    AND sim_num= #{sbh_q}
+		</if>
+		<if test="cjh_q != null and cjh_q != ''">
+		    AND dtuphone_num= #{cjh_q}
+		</if>
+		<if test="cph_q != null and cph_q != ''"> 
+        	and platenum like concat('%',#{cph_q}) 
+        </if>
+		</where>
+		
+		<choose>
+                <when test="cph_h != null and cph_h !=''">
+                    order by d.id
+                </when>
+                <otherwise>
+                	order by p.id
+                </otherwise>
+        </choose>        	
+			limit #{begin},#{end} 
+    </select>
+    <!-- 获取钢铁采购合同主表数据总数 -->
+    <select id="selectCaigouHeTongMain_count" parameterType="map" resultType="int">
+        <choose>
+                <when test="cph_q != null and cph_q !=''">
+                    select count(1) from ag_machine_plough p left join ag_dp_dev d  on  d.dtuphone_num = p.dtuphonenum
+                </when>
+                <otherwise>
+                    select count(1) from ag_dp_dev d left join ag_machine_plough p on d.dtuphone_num = p.dtuphonenum
+                </otherwise>
+        </choose>
+    	
+        
+        <where> 
+        <if test="sbh_q != null and sbh_q != ''">
+		    AND sim_num= #{sbh_q}
+		</if>
+		<if test="cjh_q != null and cjh_q != ''">
+		    AND dtuphone_num= #{cjh_q}
+		</if>
+		<if test="cph_q != null and cph_q != ''"> 
+        	and platenum like concat('%',#{cph_q})
+        </if>
+		</where>
+		
+    </select>
+  
+</mapper>

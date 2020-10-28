@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "sptp://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.pjgl.cgsp.dao.CgspDao">
+
+    <!-- 获取文件记录 -->
+    <select id="selectCgsp" parameterType="map" resultType="com.pjgl.cgsp.bean.Cgsp">
+        SELECT c.*, u.user_name as userName, u.mobile as userMobile, h.htbh as htbh, h.zje as zje FROM pjgl_cgsp c 
+        left join pjgl_cght h on c.cghtid = h.id
+        left join zscq_user u on c.jbrid = u.id 
+        <where>	
+        <if test="htbh != null and htbh != ''">
+		    h.htbh LIKE CONCAT('%',#{htbh},'%')
+		</if>
+		<if test="wjmc != null and wjmc != ''">
+		    c.wjmc LIKE CONCAT('%',#{wjmc},'%')
+		</if>
+		<if test="sprq1 != null">
+		    AND c.sprq <![CDATA[ >= ]]> #{sprq1}
+		</if>
+		<if test="sprq2 != null">
+		    AND c.sprq <![CDATA[ <= ]]> #{sprq2}
+		</if>
+		<if test="companyid != null">
+		    AND c.companyid = #{companyid}
+		</if>
+		<if test="cghtid != null and cghtid != ''">
+		    AND c.cghtid = #{cghtid}
+		</if>
+		</where>
+		ORDER BY c.sprq desc
+		limit #{begin},#{end}
+    </select>
+<!-- 获取文件记录 总数-->
+<select id="selectCgsp_count" parameterType="map" resultType="int">
+    SELECT count(1) FROM pjgl_cgsp c 
+        left join pjgl_cght h on c.cghtid = h.id 
+    <where>
+    	<if test="htbh != null and htbh != ''">
+		    h.htbh LIKE CONCAT('%',#{htbh},'%')
+		</if>
+		<if test="wjmc != null and wjmc != ''">
+		    c.wjmc LIKE CONCAT('%',#{wjmc},'%')
+		</if>
+		<if test="sprq1 != null">
+		    AND c.sprq <![CDATA[ >= ]]> #{sprq1}
+		</if>
+		<if test="sprq2 != null">
+		    AND c.sprq <![CDATA[ <= ]]> #{sprq2}
+		</if>
+		<if test="companyid != null">
+		    AND c.companyid = #{companyid}
+		</if>
+		<if test="cghtid != null and cghtid != ''">
+		    AND c.cghtid = #{cghtid}
+		</if>
+	</where>
+</select>
+
+<!-- 添加文件记录 -->
+<insert id="insertCgsp" parameterType="map" > 
+  insert into pjgl_cgsp(cghtid,spje,sprq,companyid,jbrid,remarks,path,wjmc,state) 
+  values(#{cghtid}, #{spje},#{sprq},#{companyid},#{jbrid},#{remarks},#{path},#{wjmc},#{state})
+</insert>
+
+<!-- 修改文件记录 -->
+<update id="editCgsp" parameterType="map" > 
+  update pjgl_cgsp set 
+  <if test="jbrid != null and jbrid != ''">
+	  jbrid=#{jbrid},
+  </if>
+  <if test="remarks != null and remarks != ''">
+	  remarks=#{remarks},
+  </if>
+	  wjmc=#{wjmc},
+	  path=#{path},
+  <if test="sprq != null">
+	  sprq=#{sprq},
+  </if>
+  <if test="spje != null">
+	  spje=#{spje}
+  </if>
+  <if test="state != null">
+	  state=#{state}
+  </if>
+  where id = #{id}
+</update>
+
+<delete id="deletePj" parameterType="int" > 
+  DELETE FROM 
+			pjgl_pj  
+		WHERE 
+			id = #{id}
+</delete>
+
+<select id="getById" parameterType="int" resultType="com.pjgl.cgsp.bean.Cgsp">
+        SELECT c.* FROM pjgl_cgsp c
+        <where>	
+		c.id = #{id}
+		</where>
+    </select>
+  <update id="changeState" parameterType="map" > 
+  update pjgl_cgsp set 
+  <if test="state != null">
+	  state=#{state}
+  </if>
+  where id = #{id}
+</update>
+
+<select id="countCgsp" parameterType="map" resultType="com.pjgl.cgsp.bean.Cgsp">
+        SELECT sum(c.spje) as spje,c.cghtid, h.htbh as htbh, h.zje as zje, h.qdrq as sprq FROM pjgl_cgsp c 
+        left join pjgl_cght h on c.cghtid = h.id
+        <where>	
+        <if test="htbh != null and htbh != ''">
+		    h.htbh LIKE CONCAT('%',#{htbh},'%')
+		</if>
+		<if test="sprq1 != null">
+		    AND c.sprq <![CDATA[ >= ]]> #{sprq1}
+		</if>
+		<if test="sprq2 != null">
+		    AND c.sprq <![CDATA[ <= ]]> #{sprq2}
+		</if>
+		<if test="companyid != null">
+		    AND c.companyid = #{companyid}
+		</if>
+		AND c.state = 1 
+		</where>
+		GROUP BY c.cghtid,h.htbh, h.zje, h.qdrq
+		order by max(c.sprq) desc 
+		limit #{begin},#{end}
+    </select>
+<!-- 获取文件记录 总数-->
+<select id="countCgsp_count" parameterType="map" resultType="int">
+    SELECT count(1) FROM 
+    (
+    SELECT sum(c.spje) as spje, h.htbh as htbh, h.zje as zje, h.qdrq as sprq FROM pjgl_cgsp c 
+        left join pjgl_cght h on c.cghtid = h.id
+        <where>	
+        <if test="htbh != null and htbh != ''">
+		    h.htbh LIKE CONCAT('%',#{htbh},'%')
+		</if>
+		<if test="sprq1 != null">
+		    AND c.sprq <![CDATA[ >= ]]> #{sprq1}
+		</if>
+		<if test="sprq2 != null">
+		    AND c.sprq <![CDATA[ <= ]]> #{sprq2}
+		</if>
+		<if test="companyid != null">
+		    AND c.companyid = #{companyid}
+		</if>
+		AND c.state = 1
+		</where>
+		GROUP BY c.cghtid,h.htbh, h.zje, h.qdrq
+    ) as t
+</select>
+
+<select id="selectAmounts" parameterType="map" resultType="Double">
+    sELECT sum(c.spje) FROM pjgl_cgsp c left join pjgl_cght h on c.cghtid = h.id 
+    	<where>	
+         <if test="htbh != null and htbh != ''">
+		    h.htbh LIKE CONCAT('%',#{htbh},'%')
+		</if>
+		<if test="sprq1 != null">
+		    AND c.sprq <![CDATA[ >= ]]> #{sprq1}
+		</if>
+		<if test="sprq2 != null">
+		    AND c.sprq <![CDATA[ <= ]]> #{sprq2}
+		</if>
+		<if test="companyid != null">
+		    AND c.companyid = #{companyid}
+		</if>
+		AND c.state = 1
+		</where>
+</select>
+</mapper>

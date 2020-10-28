@@ -1,0 +1,217 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<zscript>					
+	
+	import com.yewu.zscq.bean.User;
+	import com.system.utils.LogManage;
+	import com.yewu.zscq.service.WenjianService;
+	import org.zkoss.zkplus.spring.SpringUtil;
+	import java.util.List;
+	import com.zscq2.jxqd.bean.Lazb;
+	import java.util.HashMap;
+	import java.util.Map;
+	import org.zkoss.zul.Listitem;
+	import com.zscq2.jxqd.controller.LazbController;
+</zscript>	
+<zscript><![CDATA[ 
+			User user_login = (User)session.getAttribute("user");
+			String level = user_login.getLevel();//用户等级
+			Boolean level3;//是否是浏览账号
+			if("3".equals(level)){
+				level3 = false;
+			}else{
+				level3 = true;	
+			}
+			Boolean level1;//是否是管理账号
+			if("1".equals(level)){
+				level1 = true;
+			}else{
+				level1 = false;	
+			}
+			String roles  = user_login.getRoles();
+			
+			Boolean p2;//编辑权限
+			if(roles != null && roles.contains("诉讼案件更新")){//是否能够编辑诉讼案件
+				p2=true;
+			}else{
+				p2 = false;
+			}
+			
+			Boolean p3;//绝限不再提醒操作
+			if(roles != null && roles.contains("诉讼案件删除")){//是否能够删除诉讼案件
+				p3=true;
+			}else{
+				p3 = false;
+			}
+			
+			
+			]]></zscript>	
+<window>	
+<separator></separator>		
+<radiogroup id="sv1"/>
+     <hlayout> 
+            <vlayout style="border:1px">
+	            <label>案件号</label>
+	            <separator></separator>
+                <label>案件类型</label>
+                <separator></separator>
+                <label>案件状态</label>
+            </vlayout>
+            <vlayout style="border:1px">
+                <div><textbox id="ajh"/></div>
+                <div>
+                	<combobox id="ajlx" buttonVisible="true"  width="160px">
+                		<template name="model">
+             				<comboitem label="${each.ajlx}"  value="${each.ajlx}"></comboitem>
+             			</template>
+             		</combobox>
+                </div>
+                <div>
+                	<combobox id="ajzt" buttonVisible="true"  width="160px">
+                		<template name="model">
+             				<comboitem label="${each.ajlx}"  value="${each.ajlx}"></comboitem>
+             			</template>
+             		</combobox>
+             	</div>
+            </vlayout>
+            <vlayout style="border:1px">
+	            <label>原告</label>
+	            <separator></separator>
+                <label>被告</label>
+                <separator></separator>
+                <label></label>
+            </vlayout>
+            <vlayout style="border:1px">
+                <div><textbox id="yg"/></div>
+                <div><textbox id="bg"/></div>
+            </vlayout>    
+    </hlayout>
+    <separator></separator>
+    <hlayout spacing="50px"> 
+    	<div>
+	    	<button height="20px" width="60px"  label="查询" id="queryButton"/>
+	    	<button height="20px" width="60px"  label="清空" id="clearButton"/>
+   	    	<button height="20px" width="60px"  label="新增" id="addButton" visible="${p2}"/>
+   	    	<button height="20px" width="60px"  label="编辑" id="editButton" visible="${p2}"/>
+   	    	<button height="20px" width="100px"  label="下载EXCEL" id="downButton" visible="true" />
+   	    	<button height="20px" width="60px"  label="文件操作" id="uploadFile"/>
+   	    	<button height="20px" width="60px"  label="案件流程" id="lcxxButton"/>
+   	    	<button height="20px" width="60px"  label="删除" id="deleteButton"  visible="${p3}"/>
+   	    	<button height="20px" width="80px"  label="说明" id="   说明      " onClick="shuoming()"/>
+   	    	
+   	    </div>
+   	</hlayout>    
+  
+
+
+<separator></separator>					
+
+<window id="ssMainwin"  border="none"   width="100%" height="100%" minheight="500" sizable="true" position="left,top" closable="true" maximizable="true"
+apply="com.zscq2.ss.controller.SsController" action="show: slideDown;hide: slideUp" >
+
+<borderlayout  height="100%" width="100%" >
+<center autoscroll="true" border="none" >
+<panel border="none" sizable="true" ><panelchildren>
+
+	
+<div>
+
+	<listbox id="listbox" emptyMessage="未查找到记录"  >
+        <listhead>
+            <listheader label="id" align="center" visible="false"/>
+          <listheader label="案件号" align="center" width="100PX"/>
+          <listheader label="案件类型" align="center" width="100PX"/>
+          <listheader label="案由" align="center" width="150PX"/>
+          <listheader label="案件状态" align="center" width="80PX"/>
+          <listheader label="合同号" align="center" width="200PX"/>
+          <listheader label="原告" align="center" width="220PX"/>
+          <listheader label="被告" align="center" width="220PX"/>
+          <listheader label="第三方" align="center" width="50PX"/>
+          <listheader label="管辖法院" align="center" width="200PX"/>
+          <listheader label="诉争标的" align="center" width="100PX"/>
+          <listheader label="审级" align="center" width="100PX"/>
+          <listheader label="委托日期" align="center" width="150PX" />
+          <listheader label="立案日期" align="center" width="150PX"/>
+          <listheader label="答辩日期" align="center" width="150PX"/>
+          <listheader label="开庭日期" align="center" width="150PX"/>
+          <listheader label="待提交材料日期" align="center" width="150PX"/>
+          <listheader label="判决收到日期" align="center" width="150PX"/>
+          <listheader label="上诉期绝限日" align="center" width="150PX"/>
+          <listheader label="代理人" align="center" width="100PX"/>
+          <listheader label="联合办案人" align="center" width="100PX"/>
+          <listheader label="书记员电话" align="center" width="100PX"/>
+          <listheader label="承办法官" align="center" width="100PX"/>
+          <listheader label="基础代理费" align="center" width="150PX"/>
+          <listheader label="风险代理费" align="center" width="150PX"/>
+          <listheader label="是否支付" align="center" width="150PX"/>
+          <listheader label="是否开具发票" align="center" width="100PX"/>
+        </listhead>
+        <template name="model">
+            	<listitem id="${each.id}" value="${each}" >
+                <listcell label="${each.id}"  ></listcell>
+                <listcell label="${each.ajh}"  tooltiptext="${each.ajh}"></listcell>
+                <listcell label="${each.ajlx}"  tooltiptext="${each.ajh}"></listcell>
+                <listcell label="${each.ay}"  tooltiptext="${each.ajh}"></listcell>
+                <listcell label="${each.ajzt}"  tooltiptext="${each.ajh}"></listcell>
+                <listcell label="${each.hth}"  tooltiptext="${each.ajh}"></listcell>
+                <listcell label="${each.yg}"  tooltiptext="${each.ajh}"></listcell>
+                <listcell label="${each.bg}"  tooltiptext="${each.ajh}"></listcell>
+                <listcell label="${each.dsr}"  tooltiptext="${each.ajh}"></listcell>
+                <listcell label="${each.gxfy}"  tooltiptext="${each.ajh}"></listcell>
+                <listcell label="${each.szbd}"  tooltiptext="${each.ajh}"></listcell>
+                <listcell label="${each.sj}"  tooltiptext="${each.ajh}"></listcell>
+                <listcell tooltiptext="${each.ajh}"><datebox value="${each.wtrq}" readonly="true" buttonVisible="false"></datebox> </listcell> 
+                <listcell tooltiptext="${each.ajh}"><datebox value="${each.larq}" readonly="true" buttonVisible="false"></datebox> </listcell>
+                <listcell tooltiptext="${each.ajh}"><datebox value="${each.dbrq}" readonly="true" buttonVisible="false"></datebox></listcell>
+                <listcell tooltiptext="${each.ajh}"><datebox value="${each.ktrq}" readonly="true" buttonVisible="false"></datebox></listcell>
+                <listcell tooltiptext="${each.ajh}"><datebox value="${each.dtjclrq}" readonly="true" buttonVisible="false"></datebox></listcell>
+                <listcell tooltiptext="${each.ajh}"><datebox value="${each.pjsdrq}" readonly="true" buttonVisible="false"></datebox></listcell>
+                <listcell tooltiptext="${each.ajh}"><datebox value="${each.ssqjxr}" readonly="true" buttonVisible="false"></datebox></listcell>
+                <listcell label="${each.dlr}"  tooltiptext="${each.ajh}"></listcell>
+                <listcell label="${each.lhbar}"  tooltiptext="${each.ajh}"></listcell>
+                <listcell label="${each.sjydh}"  tooltiptext="${each.ajh}"></listcell>
+                <listcell label="${each.cbfg}"  tooltiptext="${each.ajh}"></listcell>
+                <listcell label="${each.jcdlf}"  tooltiptext="${each.ajh}"></listcell>
+                <listcell label="${each.fxdlf}"  tooltiptext="${each.ajh}"></listcell>
+                <listcell label="${each.zf}"  tooltiptext="${each.ajh}"></listcell>
+                <listcell label="${each.kjfp}"  tooltiptext="${each.ajh}"></listcell>
+            </listitem>
+        </template>
+    </listbox>
+    <hbox width="100%"  pack="end"><label id="recordCount">案件总数：</label></hbox>
+<hlayout width="100%">
+	<combobox id="pagesize" buttonVisible="true"  width="50px" height="50px" readonly="true">
+  			<comboitem label="10" value="10" ></comboitem>
+	    	<comboitem label="20" value="20" ></comboitem>
+	     	<comboitem label="30" value="30" ></comboitem>
+	     	<comboitem label="50" value="50" ></comboitem>
+	    </combobox>
+   	<paging id="paging" pageSize="10" width="300px"></paging > 
+</hlayout>
+
+</div>
+<zscript><![CDATA[
+pagesize.setSelectedIndex(0);//页面记录数默认值设置   
+		 
+
+]]></zscript>
+
+
+</panelchildren>
+</panel>
+</center>
+</borderlayout>  
+</window>
+<zscript><![CDATA[
+   void shuoming(){
+   	Messagebox.show("1、拥有   诉讼案件更新   角色的账号，可以保存提交流程\n"+
+   					"2、拥有    诉讼案件删除   角色的账号，可以删除诉讼案件流程\n"
+   			,"注意", Messagebox.OK, Messagebox.EXCLAMATION);
+   }
+
+   
+]]></zscript>              
+                  
+</window>
+
+</zk>

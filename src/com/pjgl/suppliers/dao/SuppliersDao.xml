@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.pjgl.suppliers.dao.SuppliersDao">
+
+    <!-- 获取供货商记录 -->
+    <select id="selectSuppliers" parameterType="map" resultType="com.pjgl.suppliers.bean.Suppliers">
+        select t.*,
+         z.companyName as companyName 
+         FROM  pjgl_suppliers t left join pjgl_company z on t.companyid = z.id 
+        <where>
+        
+		<if test="name != null and name != ''">
+		    AND t.name LIKE CONCAT('%',#{name},'%')
+		</if>
+		
+		<if test="address != null and address != ''">
+		    AND t.address LIKE CONCAT('%',#{address},'%')
+		</if>
+		
+		<if test="companyid != null and companyid != ''">
+		    AND t.companyid= #{companyid}
+		</if>
+		
+		</where>
+		 ORDER BY t.id DESC
+		limit #{begin},#{end}
+    </select>
+<!-- 获取供货商记录 总数-->
+<select id="selectSuppliers_count" parameterType="map" resultType="int">
+    sELECT count(1) FROM pjgl_suppliers t 
+    <where>
+    	<if test="name != null and name != ''">
+		    AND t.name LIKE CONCAT('%',#{name},'%')
+		</if>
+		
+		<if test="address != null and address != ''">
+		   AND t.address LIKE CONCAT('%',#{address},'%')
+		</if>
+		
+		<if test="companyid != null and companyid != ''">
+		    AND t.companyid= #{companyid}
+		</if>
+	</where>
+</select>
+     
+     
+<!-- 新增供货商记录 -->     
+<insert id="insertSuppliers" parameterType="map" > 
+  insert into pjgl_suppliers(companyid,name,address,contact,mobile,remarks) 
+  values(#{companyid},#{name}, #{address}, #{contact}, #{mobile}, #{remarks})
+</insert>      
+<!-- 编辑供货商记录 -->
+<update id="updateSuppliers" parameterType="map">
+        update pjgl_suppliers 
+        <set>
+				companyid = #{companyid} , 
+				name = #{name} , 
+				address = #{address} , 
+				contact = #{contact} , 
+				mobile = #{mobile} , 
+				remarks = #{remarks} 
+		</set>
+        where id=#{id}
+</update>
+<!-- 删除供货商信息 -->
+<delete id="deleteSuppliers" parameterType="map" >
+	delete from  pjgl_suppliers 	where id=#{id}
+</delete>
+
+<select id="getById" parameterType="int" resultType="com.pjgl.suppliers.bean.Suppliers">
+        sELECT * FROM pjgl_suppliers 
+        <where>   	
+        id = #{id}
+		</where>
+</select>
+</mapper>
