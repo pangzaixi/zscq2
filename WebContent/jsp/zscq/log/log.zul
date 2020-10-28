@@ -1,0 +1,62 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<zscript>					
+	
+	import com.yewu.zscq.bean.User;
+	import com.system.utils.LogManage;
+</zscript>	
+<window>
+<hlayout  spacing="50px"> 
+         <label>操作人</label>
+         <textbox id="operator_name"/>
+         <label>功能分类</label>
+         <textbox id="fl"/>
+         <label>日期 从</label>
+         <datebox id="rq_q1"  />
+         <label>到</label>
+         <datebox id="rq_q2"  />
+    </hlayout>
+    <separator></separator>
+    <hlayout spacing="50px"> 
+    	<div>
+	    	<button height="20px" width="60px"  label="查询" id="queryButton"/>
+	    	<button height="20px" width="60px"  label="清空" id="clearButton"/>
+   	    </div>
+   	</hlayout>
+
+<window id="log"  border="none" height="700px" apply="com.yewu.log.controller.LogController"  >
+<borderlayout  height="100%" width="100%" >
+<center autoscroll="true" border="none" >
+<panel border="none" sizable="true" ><panelchildren>
+
+<separator></separator>
+<div>
+
+	<listbox id="listbox" emptyMessage="未查找到记录"  height="100%">
+        <listhead>
+            <listheader label="id" align="center" visible="false"/>
+          <listheader label="操作人" align="center" width="100px"/>
+          <listheader label="操作时间" align="center" width="100px"/>
+          <listheader label="分类" align="center" width="100px"/>
+          <listheader label="操作内容" align="center"/>
+          
+        </listhead>
+        <template name="model">
+            <listitem>
+                <listcell id="" label="${each.id}"></listcell>
+                <listcell label="${each.operator_name}"></listcell>
+                <listcell label="${each.operate_time}"></listcell>
+                <listcell label="${each.fl}"></listcell>
+                <listcell><label value="${each.remarks}" /></listcell>  
+            </listitem>
+        </template>
+    </listbox>
+<paging id="paging" pageSize="50" ></paging>
+</div>
+</panelchildren>
+</panel>
+</center>
+</borderlayout>
+</window>  
+</window>
+</zk>

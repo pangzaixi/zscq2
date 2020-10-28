@@ -1,0 +1,192 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<zscript>					
+	import com.yewu.zscq.bean.User;
+	
+</zscript>
+<zscript><![CDATA[ 
+			User user_login = (User)session.getAttribute("user");
+			
+			String roles  = user_login.getRoles();
+			
+			
+			Boolean p2;//编辑权限
+			if(roles != null && roles.contains("立案总表更新")){//是否能够看到新增和编辑页面的保存按钮
+				p2=true;
+			}else{
+				p2 = false;
+			}
+			
+]]></zscript>	
+<window id="editJxqd" title="编辑" border="normal" width="950px" height="500px" 
+    apply="com.zscq2.jxqd.controller.EditLazbController"
+    position="center,center" closable="true"
+    action="show: slideDown;hide: slideUp">
+    
+    <zscript><![CDATA[
+	
+	]]></zscript>                      
+    
+    <vlayout>
+        <grid>
+            <columns>
+                <column hflex="1" label="" />
+                <column hflex="2" label="" align="center" />
+                <column hflex="1" label=""/>
+                <column hflex="2" label="" align="center" />
+                <column hflex="1" label=""/>
+                <column hflex="2" label="" align="center" />
+            </columns>
+            <rows>
+                <row>
+                    <label value="案件号" width="150px" />
+                    <hlayout>
+                        <textbox id="ajh" width="150px" tabindex="1" readonly="true"/>
+                    </hlayout>
+                    <label value="商标名称" width="150px" />
+                    <textbox id="sbmc" width="150px" tabindex="2"   readonly="true"/>
+                
+                    <label value="类别" width="150px" />
+                    <hlayout>
+                        <textbox id="lb" width="150px" tabindex="3" />
+                    </hlayout>
+                </row>
+                <row>
+                    <label value="商标号" width="150px" />
+                    <textbox id="sbh" width="150px" tabindex="4"   readonly="true"/>
+                    <label>案件状态</label>
+               	    <combobox id="ajzt_c" buttonVisible="true"  width="160px" readonly="true">
+                		<template name="model">
+             				<comboitem label="${each.ajzt}"  value="${each.ajzt}"></comboitem>
+             			</template>
+             		</combobox>
+                    <label value="案件类型" width="150px" />
+                    <textbox id="ajlx" width="150px" tabindex="5" readonly="true"/>
+                </row>
+                <row>
+                    <label value="客户委托日期" width="150px" />
+                    <hlayout>
+                        <datebox id="khwtrq" width="150px" readonly="true"  tabindex="1" />
+                    </hlayout>
+                    <label value="申请日" width="150px" />
+                    <datebox id="sqrq" width="150px" readonly="true" tabindex="2"  />
+                
+                    <label value="收文日期" width="150px" />
+                    <datebox id="swrq" width="150px" readonly="true" tabindex="3" />
+                    
+                </row>
+                <row>
+                    <label value="初审日期" width="150px" />
+                    <hlayout>
+                        <datebox id="csrq" width="150px" readonly="true" tabindex="1" />
+                    </hlayout>
+                    <label value="公告期" width="150px" />
+                    <textbox id="ggq" width="150px" tabindex="5"/>
+                
+                    <label value="绝限日" width="150px" />
+                    <datebox id="jxr" width="150px" readonly="true" tabindex="3" />
+                    
+                </row>
+                <row>
+                    <label value="首次提交日" width="150px" />
+                    <hlayout>
+                        <datebox id="sctjr" width="150px" readonly="true" tabindex="1" />
+                    </hlayout>
+                    <label value="补充期限" width="150px" />
+                    <datebox id="bcqx" width="150px" tabindex="5" readonly="true"/>
+                
+                    <label value="补充提交日期" width="150px" />
+                    <datebox id="bctjrq" width="150px" readonly="true" tabindex="3" />
+                    
+                </row>
+                <row>
+                	<label value="首次报送编号" width="150px" />
+                	<textbox id="scbsbh" width="150px" tabindex="5"/>
+                	<label value="二次报送编号" width="150px" />
+                	<textbox id="ecbsbh" width="150px" tabindex="5"/>
+                	<label value="委托客户名称" width="150px" />
+                	<textbox id="wtkhmc" width="150px" tabindex="5"/>
+                </row>
+                <row>
+                	<label value="被申请人" width="150px" />
+                	<textbox id="byyr" width="150px" tabindex="5"/>
+                	
+                	<label />
+                	<label/>
+                	<label value="客户付款" width="150px" />
+                	<textbox id="khfk" width="150px" tabindex="5"/>
+                </row>
+                <row>
+                	                    
+                	<label value="代理人" width="150px" />
+                	<textbox id="dlr" width="150px" tabindex="5"/>
+                	<label value="申请人" width="150px" />
+                	<textbox id="yysqr" width="150px" tabindex="5"/>
+                	<label value="盈天付款" width="150px" />
+                	<textbox id="ytfk" width="150px" tabindex="5"/>
+                </row>
+                <row>	
+                	<label value="代理人2" width="150px" />
+                	<textbox id="dlr2" width="150px" tabindex="5"/>
+                	<label value="案源人" width="150px" />
+                	<textbox id="ayr" width="150px" tabindex="5"/>
+                	<label value="代理公司" width="150px" />
+                	<vbox>
+                	<combobox id="dlgs" buttonVisible="true"  width="160px">
+                		<comboitem label="北京盈天科地知识产权代理有限公司"  value="北京盈天科地知识产权代理有限公司"></comboitem>
+                		<comboitem label="北京汇宸达知识产权代理有限公司"  value="北京汇宸达知识产权代理有限公司"></comboitem>
+             		</combobox>
+             		</vbox>
+                </row>
+               
+               <!-- 
+                <row visible="${p1}">
+                	<label value="已给客户开票" width="150px" />
+                	<doublebox id="ygkhkp" width="150px" tabindex="5"/>
+                	<label value="代交公司付款" width="150px" />
+                	<doublebox id="djgsfk" width="150px" tabindex="5"/>
+                	<label value="已给代交公司开票" width="150px" />
+                	<doublebox id="ygdjgskp" width="150px" tabindex="5"/>
+                </row>
+                <row visible="${p1}">
+                	<label value="代理人已支付提成费" width="150px" />
+                	<doublebox id="dlryzftcf" width="150px" tabindex="5"/>
+                	<label value="案源人已支付提成费" width="150px" />
+                	<doublebox id="ayryzftcf" width="150px" tabindex="5"/>
+                	
+                </row>
+                 -->
+                 <row>
+                 	<label value="官方意见" width="150px" />
+                	<textbox id="gfyj" width="150px" tabindex="5"/>
+                	<label value="官方意见收文日" width="150px" />
+                	<datebox id="gfyjswr" width="150px" readonly="true" tabindex="3" />
+                	<label value="官方意见绝限日" width="150px" />
+                	<datebox id="gfyjjxr" width="150px" readonly="true" tabindex="3" />
+                 </row>
+                <row>
+                	<cell><label value="备注" width="150px" /></cell>
+                	<cell  colspan="5" align="center">
+                		<textbox id="remarks" width="700px" rows="5"></textbox>
+                	</cell>
+                </row>
+                <row>
+                	<cell colspan="6" align="center">
+						<button id="editBtn" label="更新" width="100px" visible="${p2}"/>    
+						<button id="closeBtn" label="关闭" width="100px" onClick="closeWin()"/>            	
+                	</cell>
+                </row>
+                
+            </rows>
+        </grid>
+         
+    </vlayout>
+    <zscript><![CDATA[
+	 
+    void closeWin() {
+    	editJxqd.detach();//关闭窗口	
+    }	
+    	]]></zscript>	
+    
+</window>
+</zk>

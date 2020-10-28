@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.pjgl.cght.dao.CghtDao">
+
+    <!-- 获取文件记录 -->
+    <select id="selectCght" parameterType="map" resultType="com.pjgl.cght.bean.Cght">
+        SELECT c.*, u.user_name as userName FROM pjgl_cght c left join zscq_user u  on c.jbrid = u.id
+        <where>	
+        <if test="htbh != null and htbh != ''">
+		    c.htbh LIKE CONCAT('%',#{htbh},'%')
+		</if>
+		<if test="qdrq != null">
+		    AND c.qdrq= #{qdrq}
+		</if>
+		<if test="state != null">
+		    AND c.state= #{state}
+		</if>
+		<if test="qdrq1 != null">
+		    AND c.qdrq   <![CDATA[ >= ]]> #{qdrq1}
+		</if>
+		<if test="qdrq2 != null">
+		    AND c.qdrq  <![CDATA[ <= ]]> #{qdrq2}
+		</if>
+		AND c.companyid = #{companyid}
+		AND c.state != 2
+		</where>
+		 ORDER BY c.qdrq desc
+		 <if test="begin != null and end != null">
+		    limit #{begin},#{end}
+		</if>
+    </select>
+<!-- 获取文件记录 总数-->
+<select id="selectCght_count" parameterType="map" resultType="int">
+    SELECT count(1) FROM pjgl_cght 
+    <where>
+    	<if test="htbh != null and htbh != ''">
+		    htbh LIKE CONCAT('%',#{htbh},'%')
+		</if>
+		<if test="qdrq != null">
+		    AND qdrq= #{qdrq}
+		</if>
+		AND companyid = #{companyid}
+		AND state != 2
+	</where>
+</select>
+
+<!-- 添加文件记录 -->
+<insert id="insertCght" parameterType="map" > 
+  insert into pjgl_cght(htbh,qdrq,zje,jbrid,companyid,gysid,remarks,state) 
+  values(#{htbh}, #{qdrq},#{zje},#{jbrid},#{companyid},#{gysid},#{remarks},#{state})
+</insert>
+
+<!-- 修改文件记录 -->
+<update id="editCght" parameterType="map" > 
+  update pjgl_cght set 
+  <!-- <if test="jbrid != null and jbrid != ''">
+	  jbrid=#{jbrid},
+  </if>
+  <if test="remarks != null and remarks != ''">
+	  remarks=#{remarks},
+  </if>
+  <if test="gysid != null and gysid != ''">
+	  gysid=#{gysid},
+  </if>
+  <if test="qdrq != null">
+	  qdrq=#{qdrq},
+  </if> -->
+  jbrid=#{jbrid},remarks=#{remarks},gysid=#{gysid},qdrq=#{qdrq}
+  <if test="state != null">
+	  state=#{state}
+  </if>
+  <if test="zje != null">
+	  zje=#{zje}
+  </if>
+  where id = #{id}
+</update>
+
+<delete id="deletePj" parameterType="int" > 
+  DELETE FROM 
+			pjgl_pj  
+		WHERE 
+			id = #{id}
+</delete>
+
+<select id="getById" parameterType="int" resultType="com.pjgl.cght.bean.Cght">
+        SELECT c.* FROM pjgl_cght c
+        <where>	
+		c.id = #{id}
+		</where>
+    </select>
+ <select id="selectCghtBySupplier" parameterType="map" resultType="com.pjgl.cght.bean.Cght">
+        SELECT * FROM pjgl_cght 
+        <where>	
+			  	gysid=#{gysid}
+		</where>
+    </select>
+    
+<update id="changeZje" parameterType="map" > 
+  update pjgl_cght set 
+  <if test="zje != null">
+	  zje=#{zje}
+  </if>
+  <if test="state != null">
+	  state=#{state}
+  </if>
+  where id = #{id}
+</update>
+<!-- 通过经办人查找合同 -->
+<select id="selectCghtByJbr" parameterType="map" resultType="com.pjgl.cght.bean.Cght">
+        SELECT * FROM pjgl_cght 
+        <where>	
+			  	jbrid=#{jbrid}
+		</where>
+    </select>
+    
+    <select id="selectCount" parameterType="map" resultType="int">
+    SELECT count(1) FROM pjgl_cght 
+    <where>
+    	<if test="htbh != null and htbh != ''">
+		    htbh LIKE CONCAT('%',#{htbh},'%')
+		</if>
+		<if test="qdrq != null">
+		    AND qdrq= #{qdrq}
+		</if>
+		AND companyid = #{companyid}
+	</where>
+</select>
+</mapper>

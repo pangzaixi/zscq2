@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.pjgl.lysq.dao.LysqDao">
+
+    <!-- 获取文件记录 -->
+    <select id="selectLysq" parameterType="map" resultType="com.pjgl.lysq.bean.Lysq">
+	     SELECT l.*, c.companyName as companyName, u.user_name as userName FROM pjgl_lysq l  left join  pjgl_company c on l.companyid = c.id left join zscq_user u on l.jbrid = u.id	
+     <where> 	
+       <if test="companyName != null and companyName != ''">
+		    AND companyName= #{companyName}
+		</if>
+		<if test="lyrq != null">
+		    AND l.lyrq= #{lyrq}
+		</if>
+		<if test="lyrq1 != null">
+		    AND l.lyrq   <![CDATA[ >= ]]> #{lyrq1}
+		</if>
+		<if test="lyrq2 != null">
+		    AND l.lyrq  <![CDATA[ <= ]]> #{lyrq2}
+		</if>
+		<if test="state != null">
+		    AND l.state  = #{state}
+		</if>
+		<if test="companyid != null">
+			AND l.companyid = #{companyid}
+		</if>
+	</where> 
+		ORDER BY l.lyrq desc
+		 <if test="begin != null and end != null">
+		    limit #{begin},#{end}
+		</if>
+    </select>
+<!-- 获取文件记录 总数-->
+<select id="selectLysq_count" parameterType="map" resultType="int">
+    SELECT count(1) FROM pjgl_lysq l  left join  pjgl_company c on l.companyid = c.id left join zscq_user u on l.jbrid = u.id
+    <where> 	
+       <if test="companyName != null and companyName != ''">
+		    AND companyName= #{companyName}
+		</if>
+		<if test="lyrq != null">
+		    AND l.lyrq= #{lyrq}
+		</if>
+		<if test="lyrq1 != null">
+		    AND l.lyrq   <![CDATA[ >= ]]> #{lyrq1}
+		</if>
+		<if test="lyrq2 != null">
+		    AND l.lyrq  <![CDATA[ <= ]]> #{lyrq2}
+		</if>
+		<if test="state != null">
+		    AND l.state  = #{state}
+		</if>
+		<if test="companyid != null">
+			AND l.companyid = #{companyid}
+		</if>
+		
+	</where>
+</select>
+
+<!-- 添加文件记录 -->
+<insert id="insertLysq" parameterType="map" > 
+  insert into pjgl_lysq(jbrid,lyrq,amounts,companyid,state,remarks) 
+  values(#{jbrid}, #{lyrq}, #{amounts}, #{companyid}, #{state}, #{remarks})
+</insert>
+
+<select id="getById" parameterType="int" resultType="com.pjgl.lysq.bean.Lysq">
+        sELECT * FROM pjgl_lysq 
+        <where>   	
+        id = #{id}
+		</where>
+ </select>
+<!-- 更新领用申请信息 -->
+ <update id="editLysq">
+    update pjgl_lysq set
+    jbrid=#{jbrid},lyrq=#{lyrq},remarks=#{remarks}
+	  
+ 	 where id = #{id}
+ </update>
+ <!-- 更新领用申请状态 -->
+ <update id="editLysqState">
+ update pjgl_lysq set
+    state=#{state},remarks=#{remarks}
+	  
+ 	 where id = #{id}
+ </update>
+ <delete id="deleteLysq" parameterType="map">
+ 	delete from pjgl_lysq where id=#{id}
+ </delete>
+ <delete id="deletePj" parameterType="int">
+   DELETE FROM pjgl_lysq
+   		WHERE
+   		  id = #{id}
+ </delete>
+    <!-- 根据用户名密码查询用户信息 -->
+    <select id="selectUser" parameterType="map" resultType="com.yewu.zscq.bean.User">
+        sELECT * FROM zscq_user 
+	  
+        <where>
+        <if test="usertb != null and usertb != ''">
+		    AND login_name= #{usertb}
+		    and status='1'
+		</if>
+		
+		<if test="pwdtb != null and pwdtb != ''">
+		    AND login_pwd= #{pwdtb}
+		</if>
+		
+		</where>
+		
+    </select>
+    
+<!-- 查询账号对应的角色 -->
+<select id="selectRoles" parameterType="map" resultType="String">
+       sELECT role FROM zscq_user_role where login_name= #{login_name}
+</select>    
+     
+</mapper>

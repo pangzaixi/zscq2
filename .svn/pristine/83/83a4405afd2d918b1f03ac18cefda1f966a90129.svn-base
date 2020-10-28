@@ -1,0 +1,312 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<zscript>					
+	
+	import com.yewu.zscq.bean.User;
+	import com.system.utils.LogManage;
+	import com.yewu.zscq.service.WenjianService;
+	import org.zkoss.zkplus.spring.SpringUtil;
+	import java.util.List;
+	import com.zscq2.jxqd.bean.Lazb;
+	import java.util.HashMap;
+	import java.util.Map;
+	import org.zkoss.zul.Listitem;
+	import com.zscq2.jxqd.controller.LazbController;
+</zscript>	
+<zscript><![CDATA[ 
+			User user_login = (User)session.getAttribute("user");
+			String level = user_login.getLevel();//用户等级
+			Boolean level3;//是否是浏览账号
+			if("3".equals(level)){
+				level3 = false;
+			}else{
+				level3 = true;	
+			}
+			Boolean level1;//是否是管理账号
+			if("1".equals(level)){
+				level1 = true;
+			}else{
+				level1 = false;	
+			}
+			String roles  = user_login.getRoles();
+			Boolean p1;//费用管理权限
+			if(roles != null && roles.contains("费用管理")){//如果登录人有费用管理角色，则可以看到官费、代理费等费用
+				p1=true;
+			}else{
+				p1 = false;
+			}
+			
+			Boolean p2;//编辑权限
+			if(roles != null && roles.contains("立案总表更新")){//是否能够看到新增和编辑页面的保存按钮
+				p2=true;
+			}else{
+				p2 = false;
+			}
+			
+			Boolean p3;//绝限不再提醒操作
+			if(roles != null && roles.contains("绝限不再提醒操作")){//是否能够看到 案件完结 按钮
+				p3=true;
+			}else{
+				p3 = false;
+			}
+			
+			
+			Boolean p4;//案件删除角色
+			if(roles != null && roles.contains("案件删除角色")){//是否能够看到 案件完结 按钮
+				p4=true;
+			}else{
+				p4 = false;
+			}
+			]]></zscript>		
+<window>			
+<zscript><![CDATA[
+	org.zkoss.util.media.Media media;
+	Session session = Sessions.getCurrent(); 
+    void addItem() {
+    	
+        media = event.getMedia();
+        
+        session.setAttribute("excelImport",media);
+        LazbController lazbController =(LazbController)session.getAttribute("lazbController");
+        lazbController.onClick$excelImport();
+    }  
+    ]]></zscript>    
+<separator></separator>
+<radiogroup id="sv1"/>
+     <hlayout> 
+            <vlayout style="border:1px">
+	            <label>案件号</label>
+	            <separator></separator>
+                <label>商标名称</label>
+                <separator></separator>
+                <label>代理人</label>
+            </vlayout>
+            <vlayout style="border:1px">
+                <div><textbox id="ajh"/></div>
+                <div><textbox id="sbmc"/></div>
+                <div>
+                	<combobox id="dlr" buttonVisible="true"  width="160px">
+                		<template name="model">
+             				<comboitem label="${each.dlr}"  value="${each.dlr}"></comboitem>
+             			</template>
+             		</combobox>
+             	</div>
+            </vlayout>
+            <vlayout>
+	            <label>类别</label><separator></separator>
+                <label>商标号</label><separator></separator>
+                <label>代理人2</label><separator></separator>
+            </vlayout>
+            <vlayout>
+                <intbox id="sblb"/>
+                <textbox id="sbh" />
+                <combobox id="dlr2" buttonVisible="true"  width="160px">
+                	<template name="model">
+           				<comboitem label="${each.dlr2}" value="${each.dlr2}"></comboitem>
+           			</template>
+           		</combobox>
+            </vlayout>
+            
+            
+            <vlayout>
+	            <label>申请日期</label><separator></separator>
+                <label>至</label>
+                <label>公告期</label><separator></separator>
+                
+            </vlayout>
+            <vlayout>
+                <datebox id="sqrq_q1"  />
+                <datebox id="sqrq_q2"  />
+                 <intbox id="ggq" />
+                
+            </vlayout>
+            <vlayout>
+	            <label id="jxlx">绝限日期</label><separator></separator>
+                <label>至</label><separator></separator>
+                <label>案件类型</label>
+               	<!-- <button height="20px" width="60px"  label="切换" id="qiehuan"/><label>最近</label> -->
+            </vlayout>
+            <vlayout>
+                <datebox id="jxrq_q1"  />
+                <datebox id="jxrq_q2"  /><separator></separator>
+                <combobox id="ajlx"  width="160px" readonly="true">
+                	<template name="model">
+           				<comboitem label="${each.ajlx}" value="${each.ajlx}"></comboitem>
+           			</template>	
+           		</combobox>
+                
+            </vlayout>
+            <vlayout style="border:1px">
+	            <label>被申请人</label>
+	            <separator></separator>
+                <label>申请人</label>
+                <label>绝限提醒</label>
+            </vlayout>
+            <vlayout>
+                <div><textbox id="bsqr"/></div>
+                <div><textbox id="sqr"/></div>
+                <div><radio id="ra1" label="1个月" radiogroup="sv1" style="fontsize:20"/> <radio id="ra2" label="2个月" radiogroup="sv1"/></div>
+            </vlayout>
+    </hlayout>
+    <separator></separator>
+    <hlayout spacing="50px"> 
+    	<div>
+	    	<button height="20px" width="60px"  label="查询" id="queryButton"/>
+	    	<button height="20px" width="60px"  label="清空" id="clearButton"/>
+   	    	<button height="20px" width="60px"  label="新增" id="addButton" visible="${p2}"/>
+   	    	<button height="20px" width="60px"  label="编辑" id="editButton" visible="${p2}"/>
+   	    	<button height="20px" width="100px"  label="下载EXCEL" id="downButton" visible="true" />
+   	    	<button height="20px" width="60px"  label="上传文件" id="uploadFile"/>
+   	    	<button height="20px" width="60px"  label="下载文件" id="downloadFile"/>
+   	    	<button height="20px" width="100px"  label="单案件完结" id="changeStatus"  visible="${p3}"/>
+   	    	<button height="20px" width="100px"  label="公告期完结" id="ggqChange"  visible="${p3}"/>
+   	    	<button width="85px" id="attachBtn" sclass="attachBtn"
+                            iconSclass="z-icon-paperclip"
+                            upload="true,maxsize=35240" label="导入" onUpload="addItem()"  visible="${p2}"/>
+            <button height="20px" width="60px"  label="删除" id="deleteButton"  visible="${p4}"/>
+   	    	
+   	    	
+   	    </div>
+   	</hlayout>    
+  
+
+
+<separator></separator>
+				
+<window id="jxqdwin"  border="none"  apply="com.zscq2.jxqd.controller.LazbController"  >
+
+<borderlayout  height="100%" width="100%" >
+<center autoscroll="true" border="none" >
+<panel border="none" sizable="true" ><panelchildren>
+<div>
+
+	<listbox id="listbox" emptyMessage="未查找到记录" height="100%" >
+        <listhead>
+            <listheader label="id" align="center" visible="false"/>
+          <listheader label="案件号" align="center" width="100PX"/>
+          <listheader label="案件类型" align="center" width="100PX"/>
+          <listheader label="商标名称" align="center" width="150PX"/>
+          <listheader label="类别" align="center" width="50PX"/>
+          <listheader label="商标号" align="center" width="100PX"/>
+          <listheader label="商标状态" align="center" width="100PX"/>
+          <listheader label="公告期" align="center" width="50PX"/>
+          <listheader label="绝限日" align="center" width="100PX"/>
+          <listheader label="补充期限" align="center" width="100PX"/>
+          <listheader label="代理人" align="center" width="100PX"/>
+          <listheader label="客户委托日期" align="center" width="100PX" />
+          <listheader label="申请日" align="center" width="100PX"/>
+          <listheader label="收文日期" align="center" width="100PX"/>
+          <listheader label="初审日期" align="center" width="100PX"/>
+          <listheader label="首次提交日" align="center" width="100PX"/>
+          <listheader label="首次报送编号" align="center" width="70PX"/>
+          <listheader label="补充提交日期" align="center" width="100PX"/>
+          <listheader label="二次报送编号" align="center" width="100PX"/>
+          <listheader label="委托客户名称" align="center" width="300PX"/>
+          <listheader label="被申请人" align="center" width="300PX"/>
+          <listheader label="申请人" align="center" width="300PX"/>
+          <listheader label="官方意见" align="center" width="150PX"/>
+          <listheader label="官方意见收文日" align="center" width="150PX"/>
+          <listheader label="官方意见绝限日" align="center" width="150PX"/>
+          <listheader label="代理人2" align="center" width="100PX"/>
+          <listheader label="客户付款" align="center" width="100PX"/>
+          <listheader label="盈天付款" align="center" width="100PX"/>
+          <listheader label="案源人" align="center" width="100PX"/>
+          <listheader label="代理公司" align="center" width="250PX"/>
+          <listheader label="状态" align="center" width="150PX"/>
+          <listheader label="创建人" align="center" width="150PX"/>
+          <listheader label="备注" align="center" width="150PX"/>
+        </listhead>
+        <template name="model">
+            	<listitem id="${each.id}" value="${each}" style="${each.style}">
+                <listcell label="${each.id}"  style="${each.style}"></listcell>
+                <listcell label="${each.ajh}" style="${each.style}" tooltiptext="${each.ajh}"></listcell>
+                <listcell label="${each.ajlx}" style="${each.style}" tooltiptext="${each.ajh}"></listcell>
+                <listcell label="${each.sbmc}" style="${each.style}" tooltiptext="${each.ajh}"></listcell>
+                <listcell label="${each.lb}" style="${each.style}" tooltiptext="${each.ajh}"></listcell>
+                <listcell label="${each.sbh}" style="${each.style}" tooltiptext="${each.ajh}"></listcell>
+                <listcell label="${each.ajzt}" style="${each.style}" tooltiptext="${each.ajh}"></listcell>
+                <listcell label="${each.ggq}" style="${each.style}" tooltiptext="${each.ajh}"></listcell>
+                <listcell label="${each.jxr_str}" style="${each.style}" tooltiptext="${each.ajh}"></listcell>
+                <listcell label="${each.bcqx_str}" style="${each.style}" tooltiptext="${each.ajh}"></listcell>
+                <listcell label="${each.dlr}" style="${each.style}" tooltiptext="${each.ajh}"></listcell>
+                <listcell  style="${each.style}" tooltiptext="${each.ajh}">	<label value="${each.khwtrq_str}"></label></listcell>  
+                <listcell label="${each.sqrq_str}"  style="${each.style}" tooltiptext="${each.ajh}"></listcell> 
+                <listcell label="${each.swrq_str}" style="${each.style}" tooltiptext="${each.ajh}"></listcell>
+                <listcell label="${each.csrq_str}" style="${each.style}" tooltiptext="${each.ajh}"></listcell>
+                <listcell label="${each.sctjr_str}" style="${each.style}" tooltiptext="${each.ajh}"></listcell>
+                 <listcell label="${each.scbsbh}" style="${each.style}" tooltiptext="${each.ajh}"></listcell>
+                <listcell label="${each.bctjrq_str}" style="${each.style}" tooltiptext="${each.ajh}"></listcell>
+                <listcell label="${each.ecbsbh}" style="${each.style}" tooltiptext="${each.ajh}"></listcell>
+                <listcell label="${each.wtkhmc}" style="${each.style}" tooltiptext="${each.ajh}"></listcell>
+                <listcell label="${each.byyr}" style="${each.style}" tooltiptext="${each.ajh}"></listcell>
+                <listcell label="${each.yysqr}" style="${each.style}" tooltiptext="${each.ajh}"></listcell>
+                <listcell label="${each.gfyj}" style="${each.style}" tooltiptext="${each.ajh}"></listcell>
+                <listcell label="${each.gfyjswr}" style="${each.style}" tooltiptext="${each.ajh}"></listcell>
+                <listcell label="${each.gfyjjxr}" style="${each.style}" tooltiptext="${each.ajh}"></listcell>
+                <listcell label="${each.dlr2}" style="${each.style}" tooltiptext="${each.ajh}"></listcell>
+                <listcell label="${each.khfk}" style="${each.style}" tooltiptext="${each.ajh}"></listcell>
+                <listcell label="${each.ytfk}" style="${each.style}" tooltiptext="${each.ajh}"></listcell>
+                <listcell label="${each.ayr}" style="${each.style}" tooltiptext="${each.ajh}"></listcell>
+                <listcell label="${each.dlgs}" style="${each.style}" tooltiptext="${each.ajh}"></listcell>
+                <listcell label="${each.status}" style="${each.style}" tooltiptext="${each.ajh}"></listcell>
+                <listcell label="${each.creater}" style="${each.style}" tooltiptext="${each.ajh}"></listcell>
+                <listcell label="${each.remarks}" style="${each.style}" tooltiptext="${each.ajh}"></listcell> 
+            </listitem>
+        </template>
+    </listbox>
+    <hbox width="100%"  pack="end"><label id="recordCount">案件总数：</label></hbox>
+    
+<hlayout width="100%">
+	<combobox id="pagesize" buttonVisible="true"  width="50px" height="50px" readonly="true">
+  			<comboitem label="10" value="10" ></comboitem>
+	    	<comboitem label="20" value="20" ></comboitem>
+	     	<comboitem label="30" value="30" ></comboitem>
+	     	<comboitem label="50" value="50" ></comboitem>
+	    </combobox>
+   	<paging id="paging" pageSize="10" width="300px"></paging > 
+</hlayout>
+
+</div>
+<zscript><![CDATA[
+	pagesize.setSelectedIndex(0);//页面记录数默认值设置
+	org.zkoss.util.media.Media media;
+	Session session = Sessions.getCurrent(); 
+    void addItem() {
+    	Messagebox.show("1");
+        media = event.getMedia();
+        
+        session.setAttribute("excelImport",media);
+        LazbController lazbController =(LazbController)session.getAttribute("lazbController");
+        lazbController.onClick$excelImport();
+    }    
+
+	 
+    void downLoad(String path) {
+    	try{
+    		
+    		LogManage logManage = new LogManage();
+    		String[] temp = path.split("/");
+			 String remarks = "下载文件"+temp[temp.length-1];
+			 User user = (User)session.getAttribute("user");
+			 logManage.addLog(remarks,user);
+			
+			Filedownload.save(path, null);
+
+    	}catch (Exception e){
+    		Messagebox.show("文件下载失败");
+    	}
+    }
+    
+ 
+    
+]]></zscript>
+
+</panelchildren>
+</panel>
+</center>
+</borderlayout>
+  
+</window>
+</window>
+
+</zk>

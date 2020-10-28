@@ -1,0 +1,62 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<window id="companywin"  border="none" height="800px" apply="com.pjgl.company.controller.CompanyController"  >
+<radiogroup id="sv1"/>
+	<!-- 查询条件区 -->
+
+	
+     <hlayout> 
+        <label>公司名称</label>
+        <separator></separator>
+        <textbox id="companyName"  />
+        <label>地址</label>
+        <separator></separator>
+        <textbox id="address"  />
+       <label>联系人</label>
+        <textbox id="contact"  />
+        <!-- <label>联系方式</label>
+        <textbox id="mobile"  /> -->
+    </hlayout>
+
+    <separator></separator>
+    <!-- 按钮区 -->
+    <hlayout spacing="50px"> 
+    	<div>
+	    	<button height="20px" width="60px"  label="查询" id="queryButton"/>
+	    	<button height="20px" width="60px"  label="清空" id="clearButton"/>
+   	    	<button height="20px" width="60px"  label="新增" id="addButton"/>
+   	    	<button height="20px" width="60px"  label="编辑" id="editButton"/>
+   	    	<button height="20px" width="60px"  label="删除" id="delButton" />
+   	    </div>
+   	</hlayout>   
+   	<!-- 数据表格区 -->
+   	<separator></separator>
+<div>
+	<listbox id="commanybox" emptyMessage="未查找到记录"  >
+        <listhead>
+          <listheader label="id" align="center" visible="false"/>
+          <listheader label="公司名称" align="center" width="100PX"/>
+          <listheader label="地址" align="center" width="100PX"/>
+          <listheader label="联系人" align="center" width="150PX"/>
+          <listheader label="联系方式" align="center" width="150PX"/>
+          <listheader label="电子邮件" align="center" width="150PX"/>
+          <listheader label="传真" align="center" width="150PX"/>
+          <listheader label="备注" align="center" width="150PX"/>
+        </listhead>
+        <template name="model">
+            	<listitem id="${each.id}" value="${each}">
+            	<listcell label="${each.id}"></listcell>
+                <listcell label="${each.companyName}"></listcell>
+                <listcell label="${each.address}"></listcell>
+                <listcell label="${each.contact}"></listcell>
+                <listcell label="${each.mobile}"></listcell>
+                <listcell label="${each.email}"></listcell>
+                <listcell label="${each.fax_1}"></listcell>
+                <listcell label="${each.remarks}"></listcell>
+            </listitem>
+        </template>
+    </listbox>
+<paging id="paging" pageSize="10" ></paging>
+</div> 
+</window>
+</zk>

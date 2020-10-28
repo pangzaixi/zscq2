@@ -1,0 +1,122 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<zscript>					
+	import com.yewu.zscq.bean.User;
+	import com.zscq2.jxqd.controller.MulUpdateJxqdController;
+	import java.util.Map;
+	import java.util.HashMap;
+	import java.lang.Object;
+	import java.lang.Integer;
+</zscript>
+<window id="mulUpdateSubWin" title="批量更新" border="normal" width="900px" height="350px"
+    apply="com.zscq2.jxqd.controller.MulUpdateSubWinController"
+    position="center,center" closable="true"
+    action="show: slideDown;hide: slideUp">
+    
+    <zscript><![CDATA[ 
+			User user_login = (User)session.getAttribute("user");
+			
+			String roles  = user_login.getRoles();
+			Boolean p1;//费用管理权限
+			if(roles != null && roles.contains("费用管理")){//如果登录人有费用管理角色，则可以看到官费、代理费等费用
+				p1=true;
+			}else{
+				p1 = false;
+			}
+			Boolean p2;//编辑权限
+			if(roles != null && roles.contains("立案总表更新")){//是否能够看到新增和编辑页面的保存按钮
+				p2=true;
+			}else{
+				p2 = false;
+			}
+]]></zscript>                     
+    
+    <vlayout>
+        <grid>
+            <columns>
+                <column hflex="1" label="" />
+                <column hflex="2" label="" align="center" />
+                <column hflex="1" label=""/>
+                <column hflex="2" label="" align="center" />
+                
+            </columns>
+            <rows>
+                
+                <row>
+                   
+                    <label value="案件状态" width="150px" />
+                    <combobox id="ajzt" buttonVisible="true"  width="160px">
+                		<template name="model">
+             				<comboitem label="${each.ajzt}"  value="${each.ajzt}"></comboitem>
+             			</template>
+             		</combobox>
+                </row>
+               
+                <row>
+                    <label value="首次提交日" width="150px" />
+                    <hlayout>
+                        <datebox id="sctjr" width="150px" readonly="true" tabindex="1" />
+                    </hlayout>
+                    
+                    <label value="补充提交日期" width="150px" />
+                    <datebox id="bctjrq" width="150px" readonly="true" tabindex="3" />
+                    
+                </row>
+                <row>
+                	<label value="首次报送编号" width="150px" />
+                	<intbox id="scbsbh" width="150px" tabindex="5"/>
+                	
+                	<label value="补充报送编号" width="150px" />
+                	<intbox id="ecbsbh" width="150px" tabindex="5"/>
+                </row>
+                <row>
+                	<cell colspan="6" align="center">
+						<button id="addBtn" label="保存" width="100px" onClick="update()"/>    
+						<button id="closeBtn" label="关闭" width="100px" onClick="closeWin()"/>   
+	         	
+                	</cell>
+                </row>
+                
+            </rows>
+        </grid>
+         
+    </vlayout>
+    <zscript><![CDATA[
+                      
+	 void update(){
+		 Map map = new HashMap();
+		 if(ajzt.getValue() != null && !"".equals(ajzt.getValue().trim())){
+			 map.put("ajzt",ajzt.getValue().trim());
+		 }
+		 if(sctjr.getValue() != null){
+			 map.put("sctjr",sctjr.getValue());
+		 }
+		 if(bctjrq.getValue() != null){
+			 map.put("bctjrq",bctjrq.getValue());
+		 }
+		 
+		 if(scbsbh.getValue() != null){
+			 map.put("scbsbh",scbsbh.getValue());
+		 }
+		 
+		 if(ecbsbh.getValue() != null){
+			 map.put("ecbsbh",ecbsbh.getValue());
+		 }
+		 
+		 
+		 MulUpdateJxqdController mulUpdateJxqdController = (MulUpdateJxqdController)session.getAttribute("mulUpdateJxqdController");
+		 Map map_param = new HashMap();
+		 mulUpdateJxqdController.param(map_param);
+		 mulUpdateJxqdController.mulUpdate(map,map_param);   
+		 mulUpdateJxqdController.onClick$queryButton();
+		 closeWin();
+	        
+	 }
+    void closeWin() {
+    	mulUpdateSubWin.detach();//关闭窗口	
+    }
+   
+    	]]></zscript>	
+    
+</window>
+</zk>

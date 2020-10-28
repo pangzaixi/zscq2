@@ -1,0 +1,14 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+
+<window  title="消息" border="normal" width="300px" height="200px"
+    apply="com.system.base.FeizuduanController"
+    position="center,center" closable="true"
+    action="show: slideDown;hide: slideUp">
+
+
+	<separator></separator>
+	<hbox width="100%"  pack="center"><label id="message" style="fontSize:2px;color:red"></label></hbox>
+	
+</window>
+</zk>

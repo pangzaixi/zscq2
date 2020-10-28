@@ -1,0 +1,112 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+
+<window id="stockUseWin" title="领用" border="normal" width="1000px" 
+    apply="com.pjgl.stockUse.controller.StockUseController"
+    position="center,center" closable="true"
+    action="show: slideDown;hide: slideUp">
+<radiogroup id="sv1"/>
+	<!-- 查询条件区 -->
+
+	<separator></separator>
+    <!-- 按钮区 -->
+    <hlayout>
+    	
+    		领用备注<textbox id="pkRemarks"  width="150px" rows="4"/>
+    		<vlayout>
+    		<label>领用车辆：</label>
+    		<separator></separator>
+    		<label>配件：</label>
+    		<separator></separator>
+    		<label>领用数量：</label>
+    		</vlayout>
+    		<vlayout> 
+			    	<combobox id="car" buttonVisible="true"  width="160px" readonly="true">
+			       		<template name="model">
+			    		<comboitem label="${each.plate_num}" context="${each.mobile }" value="${each.driverName}"></comboitem>
+			    		</template>
+			    		</combobox>
+			    	<textbox id="pjName" width="150px"/>
+			    		<decimalbox id="totalNum" format="######.##" width="150px" onChange="cal()" constraint="no empty"/>
+		   	</vlayout>
+		   	<vlayout>
+		   	<label>领用人：</label>
+		   	<separator></separator>
+		   	<label>规格：</label>
+		   	<separator></separator>
+		   	<label>金额：</label>
+		   	</vlayout>
+		    <vlayout> 
+			    	<textbox id="driver" width="150px"/>
+			    	<textbox id="pjGG"  width="150px"/>
+			    	<decimalbox id="amounts" format="######.##" width="150px" readonly="true"/>
+		   	</vlayout>
+		   	<vlayout>
+		   	<label>电话：</label>
+		   	<separator></separator>
+		   	<label>单位：</label>
+		   	<separator></separator>
+		   	<label>单价：</label>
+		   	</vlayout>
+		   	<vlayout > 
+		   		<textbox id="mobile"  width="150px"/>
+		   		<textbox id="pjdw"  width="150px"/>
+		    	<decimalbox id="averagePrice" readonly="true" width="150px"/>
+		   	</vlayout>
+		   	<vlayout>
+		   	<label></label>
+		   	<separator></separator>
+		   	<separator></separator>
+		   	<button height="20px" width="60px"  label="保存" id="saveButton"/>
+		    	<button height="20px" width="60px"  label="重置" id="clearButton"/>
+		   	</vlayout>
+   	</hlayout>   
+   	<!-- 数据表格区 -->
+   	<separator></separator>
+<div>
+	<listbox id="stockUseListbox" emptyMessage="未查找到记录">
+        <listhead>
+          <listheader label="id" align="center" visible="false"/>
+          <listheader label="配件名称" align="center" width="100PX"/>
+          <listheader label="规格型号" align="center" width="100PX"/>
+          <listheader label="单位" align="center" width="100PX"/>
+          <listheader label="当前库存量" align="center" width="100PX"/>
+          <listheader label="库存金额" align="center" width="100PX"/>
+          <listheader label="单价" align="center" width="100PX"/>
+        </listhead>
+        <template name="model">
+            	<listitem id="${each.id}" value="${each}" >
+            	<listcell label="${each.id}"></listcell>
+                <listcell label="${each.pjname}"></listcell>
+                <listcell label="${each.pjgg}"></listcell>
+                <listcell label="${each.pjdw}"></listcell>
+                <listcell label="${each.totalNum}"></listcell>
+                <listcell label="${each.amounts}"></listcell>
+                <listcell label="${each.ageragePrice}"></listcell>
+            </listitem>
+        </template>
+    </listbox>
+<separator></separator>
+<hlayout>
+	<textbox id="erweima" value=""></textbox><label style="color:red;text-decoration:underline" value="扫码前，确保光标处于左侧输入框中"/>
+</hlayout>
+<separator></separator>
+<textbox id="remarks" width="1000px" rows="5" readonly="true"></textbox>
+</div> 
+<zscript><![CDATA[
+erweima.focus();
+void cal() {
+	if(stockUseListbox.getSelectedItem() != null){
+		java.math.BigDecimal num = totalNum.getValue();	
+		java.math.BigDecimal averagePrice = averagePrice.getValue();
+    	if(num != null && averagePrice != null){
+    		amounts.setValue(num.multiply(averagePrice));
+    	}	
+	}else{
+		Messagebox.show("请选择库存记录","注意", Messagebox.OK, Messagebox.EXCLAMATION);
+	}
+	
+}
+	]]></zscript>
+</window>
+</zk>

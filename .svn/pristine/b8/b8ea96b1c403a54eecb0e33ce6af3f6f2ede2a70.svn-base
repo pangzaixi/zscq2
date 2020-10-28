@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.pjgl.employeeManage.dao.EmployeeManageDao">
+
+    <!-- 获取员工记录 -->
+    <select id="selectEmployeeManage" parameterType="map" resultType="com.pjgl.employeeManage.bean.EmployeeManage">
+        select t.*, z.companyName as companyName,
+          j.department as departmentName
+         FROM  zscq_user t
+        left  join pjgl_company z on t.companyid = z.id 
+        left  join pjgl_zzjg j on t.departmentid = j.id 
+        <where>
+		<if test="login_name != null and login_name != ''">
+		    AND t.login_name LIKE CONCAT('%',#{login_name},'%')
+		</if>
+		
+		<if test=" user_name != null and  user_name != ''">
+		    AND t.user_name LIKE CONCAT('%',#{user_name},'%')
+		</if>
+			<if test="departmentid != null and departmentid != ''">
+		    AND t.departmentid = #{departmentid}
+		</if>
+			<if test="companyid != null and companyid != ''">
+		    AND t.companyid = #{companyid}
+		</if>
+		</where>
+		 ORDER BY t.id DESC
+		limit #{begin},#{end}
+    </select>
+<!-- 获取员工记录 总数-->
+<select id="selectEmployeeManage_count" parameterType="map" resultType="int">
+    sELECT count(1) 
+         FROM  zscq_user t
+          left join pjgl_company z on t.companyid = z.id 
+          left join pjgl_zzjg j on t.departmentid = j.id 
+        <where>
+		<if test="login_name != null and login_name != ''">
+		    AND t.login_name LIKE CONCAT('%',#{login_name},'%')
+		</if>
+		
+		<if test=" user_name != null and  user_name != ''">
+		    AND t.user_name LIKE CONCAT('%',#{user_name},'%')
+		</if>
+			<if test="departmentid != null and departmentid != ''">
+		    AND t.departmentid = #{departmentid}
+		</if>
+			<if test="companyid != null and companyid != ''">
+		    AND t.companyid = #{companyid}
+		</if>
+		</where>
+</select>
+     
+     
+<!-- 新增员工记录 -->     
+<insert id="insertEmployeeManage" parameterType="map" > 
+  insert into zscq_user(login_name,login_pwd,companyid,user_name,departmentid,mobile,fax,email,status) 
+  values(#{login_name},#{login_pwd},#{companyid},#{user_name},#{departmentid}, #{mobile},#{fax} ,#{email},#{status})
+</insert>      
+<!-- 编辑员工记录 -->
+<update id="updateEmployeeManage" parameterType="map">
+        update zscq_user 
+        <set>
+        departmentid= #{departmentid},	login_name = #{login_name} , login_pwd = #{login_pwd} ,	user_name = #{user_name} ,	companyid = #{companyid} ,  mobile = #{mobile} , 	fax = #{fax} ,email=#{email},status=#{status} 
+		</set>
+        where id=#{id}
+</update>
+<!-- 修改员工状态信息 -->
+<delete id="statusSwitchEmployeeManage" parameterType="map" >
+	update  zscq_user set status=#{status}	where id=#{id} 
+</delete>
+
+<select id="getById" parameterType="int" resultType="com.pjgl.employeeManage.bean.EmployeeManage">
+        SELECT * FROM zscq_user 
+        <where>   	
+        id = #{id}
+		</where>
+</select>
+<select id="getByCompanyId" parameterType="map" resultType="com.pjgl.employeeManage.bean.EmployeeManage">
+        SELECT * FROM zscq_user 
+        <where>   	
+   			 <if test=" companyid!= null and companyid != ''">
+				AND companyid = #{companyid} 
+			</if>
+		</where>
+</select>
+</mapper>

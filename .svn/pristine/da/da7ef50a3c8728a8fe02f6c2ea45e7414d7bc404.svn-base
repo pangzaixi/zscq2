@@ -1,0 +1,58 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<zscript>					
+	import com.yewu.hetong.caigou.gtcg.bean.GangtiecaigouhetongMain;
+	
+</zscript>	
+<style src="/css/style.css"/>
+<window id="gangtiecaigouhetong"  border="none" height="700px" apply="com.system.os.controller.SbcxController"  >  
+
+<groupbox >
+<caption label="搜索条件"/>
+
+		
+		<div sclass="grid">
+        	<div>设备号：<textbox id="sbh_q"/></div>
+        	<div>采集号：<textbox id="cjh_q" /></div>
+            <div>车牌号：<textbox id="cph_q"  /></div>
+            
+            <div>设备类型：
+            	<combobox id="sblx_q" buttonVisible="true">
+            	<template name="model">
+             		<comboitem  label="${each}"></comboitem>
+             	</template>	
+             	</combobox>
+            </div>
+		    <div><button height="20px" width="60px"  label="清空" id="clearButton"/></div>
+    	    <div><button height="20px" width="60px"  label="查询" id="queryButton"/></div>
+        
+		     
+		
+    </div>
+		
+</groupbox>
+
+<separator></separator>
+<div>
+	<listbox id="resultList2" emptyMessage="No car found in the result"   rows="10" >
+        <listhead>
+          <listheader label="id" align="center" visible="false"/>
+          <listheader label="设备编号" align="center"/>
+          <listheader label="采集号" align="center"/>
+          <listheader label="车牌号" align="center"/>
+        </listhead>
+        <template name="model">
+            <listitem>
+                <listcell label="${each.id}"></listcell>
+                <listcell label="${each.sim_num}"></listcell>
+                <listcell label="${each.dtuphone_num}"></listcell>
+                <listcell label="${each.platenum}"></listcell> 
+            </listitem>
+        </template>
+    </listbox>
+<paging id="paging" pageSize="10" ></paging>
+</div>
+
+  
+</window>
+</zk>

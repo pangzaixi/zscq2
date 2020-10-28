@@ -1,0 +1,54 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<style src="/style.css" />
+<window id="qxglwin"  border="none" height="800px" apply="com.system.qxgl.controller.QxglController"  >
+<radiogroup id="sv1"/>
+	<!-- 查询条件区 -->
+     <hlayout> 
+        <label>登录账号</label>
+        <separator></separator>
+        <textbox id="login_name"/>
+        <label>用户姓名</label>
+        <separator></separator>
+        <textbox id="user_name"/>
+        <separator></separator>
+        <label>模块名称</label>
+       	<combobox id="title" buttonVisible="true"  width="160px">
+    		<comboitem label="${each}"></comboitem>
+    	</combobox>
+    </hlayout>
+    <separator></separator>
+    <!-- 按钮区 -->
+    <hlayout spacing="50px"> 
+    	<div>
+	    	<button height="20px" width="60px"  label="查询" id="queryButton"/>
+	    	<button height="20px" width="60px"  label="清空" id="clearButton"/>
+   	    	<button height="20px" width="120px"  label="分配权限" id="addButton"/>
+   	    	<button height="20px" width="60px"  label="删除" id="delButton"/>
+   	    </div>
+   	</hlayout>   
+   	<!-- 数据表格区 -->
+   	<separator></separator>
+<div>
+	<listbox id="listbox" emptyMessage="未查找到记录"  >
+        <listhead>
+          <listheader label="id" align="center" visible="false"/>
+          <listheader label="登录账号" align="center" width="100PX"/>
+          <listheader label="用户姓名" align="center" width="100PX"/>
+          <listheader label="模块名称" align="center" width="150PX"/>
+          <listheader label="排序号" align="center" width="150PX"/>
+        </listhead>
+        <template name="model">
+            	<listitem id="${each.id}" value="${each}">
+            	<listcell label="${each.id}"></listcell>
+                <listcell label="${each.login_name}"></listcell>
+                <listcell label="${each.user_name}"></listcell>
+                <listcell label="${each.title}"></listcell>
+                <listcell label="${each.orderno}"></listcell>
+            </listitem>
+        </template>
+    </listbox>
+<paging id="paging" pageSize="10" ></paging>
+</div> 
+</window>
+</zk>

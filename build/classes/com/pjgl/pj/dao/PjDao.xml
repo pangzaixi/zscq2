@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.pjgl.pj.dao.PjDao">
+
+    <!-- 获取文件记录 -->
+    <select id="selectPj" parameterType="map" resultType="com.pjgl.pj.bean.Pj">
+        SELECT p.* FROM pjgl_pj p	  
+        <where>	
+        <if test="name != null and name != ''">
+		    p.name LIKE CONCAT('%',#{name},'%')
+		</if>
+		<if test="unit != null and unit != ''">
+		    AND p.unit= #{unit}
+		</if>
+		<if test="code != null and code != ''">
+		    AND p.code= #{code}
+		</if>
+		<if test="companyid != null and companyid != ''">
+		    AND p.companyid= #{companyid}
+		</if>
+		<if test="pjids != null and pjids.size() > 0">
+		    AND id not in  
+       			<foreach collection="pjids" index="index" item="item" open="(" separator="," close=")">  
+       				 #{item}  
+      			</foreach> 
+		</if>
+		</where>
+		 
+		limit #{begin},#{end}
+    </select>
+<!-- 获取文件记录 总数-->
+<select id="selectPj_count" parameterType="map" resultType="int">
+    SELECT count(1) FROM pjgl_pj 
+    <where>
+    	<if test="name != null and name != ''">
+		    name LIKE CONCAT('%',#{name},'%')
+		</if>
+		<if test="unit != null and unit != ''">
+		    AND unit= #{unit}
+		</if>
+		<if test="code != null and code != ''">
+		    AND p.code= #{code}
+		</if>
+		<if test="companyid != null and companyid != ''">
+		    AND companyid= #{companyid}
+		</if>
+		<if test="pjids != null and pjids.size() > 0">
+		    AND id not in  
+       			<foreach collection="pjids" index="index" item="item" open="(" separator="," close=")">  
+       				 #{item}  
+      			</foreach> 
+		</if>
+	</where>
+</select>
+
+<!-- 添加文件记录 -->
+<insert id="insertPj" parameterType="map" > 
+  insert into pjgl_pj(name,spec,unit,brand,companyid,remarks,upper_limit,lower_limit,code) 
+  values(#{name}, #{spec},#{unit},#{brand},#{companyid},#{remarks},#{upper_limit},#{lower_limit},#{code})
+</insert>
+
+<!-- 修改文件记录 -->
+<update id="editPj" parameterType="map" > 
+  update pjgl_pj set 
+  name=#{name}, spec=#{spec}, unit=#{unit}, brand=#{brand}, remarks=#{remarks}, upper_limit=#{upper_limit}, lower_limit=#{lower_limit}
+  where id = #{id}
+</update>
+
+<delete id="deletePj" parameterType="int" > 
+  DELETE FROM 
+			pjgl_pj  
+		WHERE 
+			id = #{id}
+</delete>
+
+<select id="getById" parameterType="map" resultType="com.pjgl.pj.bean.Pj">
+        SELECT p.* FROM pjgl_pj p	  
+        <where>	
+		p.id = #{id}
+		</where>
+		 
+    </select>
+ 
+ <!-- 获得配件在采购合同和库存中的使用情况，如果存在对应的采购合同或者库存，则不允许删除 -->
+<select id="selectPjStatus" parameterType="map" resultType="int">
+select sum(c) from (
+	select count(1) c from pjgl_cght_sub where pjid = #{pjid}
+	union ALL
+	select count(1) c from pjgl_stock where pjid = #{pjid}) a
+ </select>
+</mapper>

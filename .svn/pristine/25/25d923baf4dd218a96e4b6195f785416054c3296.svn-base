@@ -1,0 +1,44 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<window id="carwin"  border="none" apply="com.pjgl.car.controller.CarController">
+<radiogroup id="sv1"/>
+	<!-- 查询条件区 -->
+     <hlayout >
+		<label>案件类型</label>
+        <separator></separator>
+        <textbox id="ajlx"  />
+       
+                        
+     </hlayout>
+<separator></separator>
+<!-- 按钮区 -->
+    <hlayout spacing="50px"> 
+    	<div>
+	    	<button height="20px" width="60px"  label="查询" id="queryButton"/>
+	    	<button height="20px" width="60px"  label="清空" id="clearButton" visible="true"/>
+   	    	<button height="20px" width="60px"  label="新增" id="addButton" visible="true"/>
+   	    	<button height="20px" width="60px"  label="编辑" id="editButton" visible="false"/>
+   	    	<button height="20px" width="60px"  label="删除" id="delButton"  visible="true"/>
+   	    </div>
+   	</hlayout>   
+   	<!-- 数据表格区 -->
+   	<separator></separator>
+                
+<div>
+	<listbox id="listbox" emptyMessage="未查找到记录"  >
+        <listhead>
+          <listheader label="案件类型" align="center" width="100PX"/>
+          <listheader label="案件号前缀" align="center" width="100PX"/>
+        </listhead>
+        <template name="model">
+           	<listitem >
+            	<listcell label="${each.mobile}"></listcell>
+                <listcell label="${each.remarks}"></listcell>
+            </listitem>
+        </template>
+    </listbox>
+<paging id="paging" pageSize="10" ></paging>
+</div> 
+
+</window>
+</zk>

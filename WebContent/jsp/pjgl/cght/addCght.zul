@@ -1,0 +1,76 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<window id="addCghtWin" title="新增合同" border="normal" width="600px" 
+    apply="com.pjgl.cght.controller.AddCghtController"
+    position="center,center" closable="true"
+    action="show: slideDown;hide: slideUp">
+    
+<vlayout>
+        <grid>
+            <columns>
+                <column hflex="1" label="" />
+                <column hflex="2" label="" align="center" />
+                <column hflex="1" label=""/>
+                <column hflex="2" label="" align="center" />
+          </columns>
+            <rows>
+                <row>
+                    <label value="经办人" width="150px" />
+                    <hlayout>
+                        <combobox id="jbr" buttonVisible="true"  width="160px">
+			       		<template name="model">
+			    		<comboitem label="${each.user_name}" context="${each.mobile }" value="${each.id}"></comboitem>
+			    		</template>
+			    	</combobox>
+                    </hlayout>
+                    <label value="联系电话" width="150px" />
+                    <textbox id="userMobile" width="150px"  tabindex="2" readonly="true"/>
+                </row>
+                <row>
+                    <label value="供应商" width="150px" />
+                    <combobox id="gys" buttonVisible="true"  width="160px" >
+			       		<template name="model">
+			    		<comboitem label="${each.name}" context="${each.mobile }" value="${each.id}" ></comboitem>
+			    		</template>
+			    	</combobox>
+			    	<label value="联系电话" width="150px" />
+                    <textbox id="supplierMobile" width="150px"  tabindex="2" readonly="true"/>
+                </row>
+                <row>
+			    	<label value="签订日期" width="150px" />
+                    <datebox id="qdrq" width="150px"  tabindex="2"/>
+                    <label value="自采购" width="150px" />
+                    <combobox id="zcg" buttonVisible="true"  width="160px" >
+			       		<!-- <template name="model"> -->
+			       		<comboitem label="否"  value="否" ></comboitem>
+			    		<comboitem label="是"  value="是" ></comboitem>
+			    		<!-- </template> -->
+			    	</combobox>
+                </row>
+                <row>
+                	<cell><label value="备注" width="150px" /></cell>
+                	<cell  colspan="3" align="center">
+                		<textbox id="remarks" width="400px" rows="3"></textbox>
+                	</cell>
+                </row>
+                
+                <row>
+                	<cell colspan="4" align="center">
+                		<button id="addBtn" label="保存" width="100px" />    
+						<button id="closeBtn" label="关闭" width="100px" onClick="closeWin()"/>            	
+                	</cell>
+                </row>
+                
+            </rows>
+        </grid>
+         
+    </vlayout>
+    <zscript><![CDATA[
+	 
+    void closeWin() {
+    	addCghtWin.detach();//关闭窗口	
+    }	    
+    
+    ]]></zscript>
+</window>
+</zk>

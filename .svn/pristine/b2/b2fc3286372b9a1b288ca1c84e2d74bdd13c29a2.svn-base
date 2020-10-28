@@ -1,0 +1,87 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<style src="/css/grid/style.css" />
+<zscript>
+	import com.yewu.zscq.bean.User;
+</zscript>	
+
+<zscript><![CDATA[ 	
+	User user = (User)session.getAttribute("user");
+	String level = user.getLevel();//用户等级
+	Boolean level1;
+	if("1".equals(level)){
+		level1 = true;
+	}
+]]></zscript>
+
+<window id="cgfkcountwin"  border="none" height="800px" apply="com.pjgl.cgfk.controller.CountCgfkController"  >
+<radiogroup id="sv1"/>
+	<!-- 查询条件区 -->
+     <hlayout> 
+        <label>合同编号</label>
+        <separator></separator>
+        <textbox id="htbh"/>
+        <label>收票日期</label>
+        <separator></separator>
+        <datebox id="fkrq1"  />
+        <label>-</label>
+        <datebox id="fkrq2"  />
+    	
+    </hlayout>
+    <separator></separator>
+    <!-- 按钮区 -->
+    <hlayout spacing="50px"> 
+    	<div>
+	    	<button height="20px" width="60px"  label="查询" id="queryCgfkButton"/>
+	    	<button height="20px" width="60px"  label="清空" id="clearCgfkButton"/>
+   	    	<button height="20px" width="60px"  label="新增" id="addButton"/>
+   	    	
+   	    </div>
+   	</hlayout>   
+   	<!-- 数据表格区 -->
+   	<separator></separator>
+<div>
+<grid id="countcgfkbox" >
+    <!-- <auxhead sclass="category-center">
+        <auxheader label="采购付款" colspan="9" rowspan="1" />
+    </auxhead> -->
+    <columns>
+        <column hflex="1" visible="true">操作</column>
+        <column hflex="1">合同编号</column>
+        <column hflex="1">合同日期</column>
+        <column hflex="1">合同金额</column>
+        <column hflex="1">已付款总额</column>
+    </columns>
+    <template name="model">
+        <row >
+        	<label style="color:red;text-decoration:underline" context="${each.cghtid}" onDoubleClick="details(self.getContext())" visible="true">详情</label>
+            <label value="${each.htbh}" ></label>
+            <label value="${each.fkrqStr}"></label>
+            <label value="${each.zje}"></label>
+            <label value="${each.fkje}"></label>
+        </row>
+    </template>
+    <foot>
+        <footer  span="5" id="footercategory"    class="footer_right"></footer>
+    </foot>
+</grid>    
+<paging id="pagingCount" pageSize="10" ></paging>
+</div>
+<zscript>
+	void details(String cghtid){
+		Map arg1 = new HashMap();
+		arg1.put("cghtid", cghtid);
+		
+		arg1.put("htbh", htbh.getValue());
+		arg1.put("fkrq1", fkrq1.getValue());
+		arg1.put("fkrq2", fkrq2.getValue());
+		
+		Window window = (Window)Executions.createComponents(
+	            "/jsp/pjgl/cgfk/cgfk.zul", null, arg1);
+		window.doModal();
+		
+	}
+	
+</zscript> 
+</window>
+</zk>

@@ -1,0 +1,114 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<zscript>
+import java.util.ArrayList;
+import java.util.List;
+import org.zkoss.util.media.Media;
+import com.zscq2.jxqd.controller.UploadFileController;
+
+
+</zscript>
+			
+<window id="uploadSsFileWin"   border="normal" width="980px" height="500px" closable="true"
+	  apply="com.zscq2.ss.controller.UploadSsajController" title="上传文件">
+	
+    <separator></separator>
+    <vlayout>
+    <hlayout spacing="50px">
+    	<vlayout width="300px">
+    		<button width="85px" id="attachBtn" sclass="attachBtn"
+                            iconSclass="z-icon-paperclip"
+                            upload="true,maxsize=35240" label="选择文档" onUpload="addItem()"/>
+                            
+   			<vlayout id="flist" hflex="1" sclass="fileList" />
+    	</vlayout> 
+    		<button height="20px" width="70px"  label="确认上传" id="uploadFile" visible="false"/>
+   	</hlayout>    
+ 	   
+   
+   <listbox id="listbox" emptyMessage="未查找到记录" height="300px" >
+        <listhead>
+          <listheader label="案件号" align="center" width="50PX"/>
+          <listheader label="案件类型" align="center" width="50PX"/>
+          <listheader label="原告" align="center" width="100PX"/>
+          <listheader label="被告" align="center" width="100PX"/>
+          <listheader label="代理人" align="center" width="50PX"/>
+          <listheader label="文件名" align="center" width="150PX"/>
+        </listhead>
+        <template name="model">
+            	<listitem  value="${each}" context="${each.ajh}" >
+                <listcell label="${each.ajh}"></listcell>
+                <listcell label="${each.ajlx}"></listcell>
+                <listcell label="${each.yg}"></listcell>
+                <listcell label="${each.bg}"></listcell>
+                <listcell label="${each.dlr}"></listcell>
+                <listcell label="${each.remarks}" style="color:red;text-decoration:underline" onDoubleClick ="downLoad()"></listcell> 
+            </listitem>
+        </template>
+    </listbox>
+	<paging id="paging" pageSize="100" ></paging>                         
+</vlayout>
+ 
+<separator></separator>
+<zscript><![CDATA[
+	
+	org.zkoss.util.media.Media media;
+	Session session = Sessions.getCurrent(); 
+//	List<String> mediaList = new ArrayList<String>();
+//	session.setAttribute("mediaList",mediaList);
+    void addItem() {
+    	uploadFile.setVisible(false);
+        media = event.getMedia();
+        session.setAttribute("media",media);
+        
+        
+        //循环文件集合，如果有同名文件，则提示不能上传同名文件
+//        for(org.zkoss.util.media.Media media_t:mediaList){
+//        	if((media.getName()).endsWith(media_t.getName())){
+//        		Messagebox.show("同名文件，禁止上传","注意", Messagebox.OK, Messagebox.EXCLAMATION);
+//        		return;
+//        	}
+//        	
+//        }
+        
+        
+        Hlayout hl = new Hlayout();
+        hl.setSpacing("6px");
+        hl.setClass("newFile");
+        hl.appendChild(new Label(media.getName()));
+        String filename = media.getName();
+        
+        String filetype = media.getFormat();
+        filename = filename.substring(0,filename.length()-filetype.length()-1);
+        
+        
+        
+        if(flist.getChildren().size()!=0){//如果已经选择了一个附件，则删除前一个附件，只保留最后一个附件
+	        flist.removeChild(flist.getChildren().get(0));
+        }    
+        flist.appendChild(hl);
+        uploadFile.setVisible(true);
+//        UploadFileController uploadFileController = (UploadFileController)session.getAttribute("uploadFileController");
+//        uploadFileController.getLazb(filename);
+        
+    }
+   
+    void downLoad() {
+    	try{
+    		Listitem listitem = listbox.getSelectedItem();
+    		com.zscq2.ss.bean.Ssaj ssaj = listitem.getValue();
+    		String path  = "upload/ss/"+ssaj.getAjh()+"/"+ssaj.getRemarks();
+    		 path.replace("/", "\\");
+    		
+    		Filedownload.save(path, null);
+
+    	}catch (Exception e){
+    		Messagebox.show("文件下载失败");
+    	}
+    }
+    ]]></zscript>
+  
+</window>
+
+
+</zk>

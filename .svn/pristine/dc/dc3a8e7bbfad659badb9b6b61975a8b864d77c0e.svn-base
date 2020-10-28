@@ -1,0 +1,108 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<zscript>					
+	import com.yewu.hetong.caigou.gtcg.bean.GangtiecaigouhetongMain;
+	import com.yewu.zscq.bean.User;
+	import com.system.utils.LogManage;
+	import com.yewu.zscq.service.WenjianService;
+	import org.zkoss.zkplus.spring.SpringUtil;
+</zscript>	
+<zscript><![CDATA[ 
+			
+			
+			]]></zscript>			
+<window id="user"  border="none" height="700px" apply="com.yewu.zscq.usermanage.controller.UserController"  >
+
+     <hlayout  spacing="50px"> 
+            <vlayout>
+	            <label>案件号</label>
+                <label>商标名称</label>
+            </vlayout>
+            <vlayout>
+                <textbox id="ajh"/>
+                <textbox id="sbmc" />
+            </vlayout>
+            <vlayout>
+	            <label>商标类别</label>
+                <label>商标号</label>
+            </vlayout>
+            <vlayout>
+                <intbox id="sblx"/>
+                <intbox id="sbh" />
+            </vlayout>
+            <vlayout>
+	            <label>文件名称</label>
+                <label>代理人</label>
+            </vlayout>
+            <vlayout>
+                <textbox id="wjmc"/>
+                <textbox id="dlr" />
+            </vlayout>
+            <vlayout>
+	            <label>录入日期</label>
+                <label>至</label>
+            </vlayout>
+            <vlayout>
+                <datebox id="lrrq_q1"  />
+                <datebox id="lrrq_q2"  />
+            </vlayout>
+    </hlayout>
+    <separator></separator>
+    <hlayout spacing="50px"> 
+    	<div>
+	    	<button height="20px" width="60px"  label="查询" id="queryButton"/>
+	    	<button height="20px" width="60px"  label="清空" id="clearButton"/>
+   	    	<button height="20px" width="60px"  label="新增" id="addButton" visible="${level3}"/>
+   	    	<button height="20px" width="60px"  label="删除" id="delButton" visible="${level1}"/>
+   	    	<button height="20px" width="60px"  label="下载" id="downButton" visible="${level1}"/>
+   	    	
+   	    	<button height="20px" width="60px"  label="测试" id="testButton"/>
+   	    	
+   	    </div>
+   	</hlayout>    
+  
+
+
+<separator></separator>
+<div>
+
+	<listbox id="listbox" emptyMessage="未查找到记录"  >
+        <listhead>
+            <listheader label="id" align="center" visible="false"/>
+          <listheader label="账号" align="center"/>
+          <listheader label="密码" align="center"/>
+          <listheader label="姓名" align="center"/>
+          <listheader label="等级" align="center"/>
+          <listheader label="状态" align="center"/>
+         
+        </listhead>
+        <template name="model">
+            <listitem id="${each.id}" onClick="editUser()">
+                <listcell label="${each.id}"></listcell>
+                <listcell label="${each.login_name}"></listcell>
+                <listcell label="${each.login_pwd}"></listcell>
+                <listcell label="${each.user_name}"></listcell>
+                <listcell label="${each.level}"></listcell>
+                <listcell label="${each.status}"></listcell>
+            </listitem>
+        </template>
+    </listbox>
+<paging id="paging" pageSize="10" ></paging>
+<textbox id="id2"></textbox>
+</div>
+<zscript><![CDATA[
+	
+    void editUser() {
+    	try{
+    		Listitem listitem = listbox.getSelectedItem();
+    		id2.setValue(listitem.getChildren().get(0).get);
+    	}catch (Exception e){
+//    		Messagebox.show("文件下载失败");
+    	}
+    }
+    
+    
+]]></zscript>
+  
+</window>
+</zk>

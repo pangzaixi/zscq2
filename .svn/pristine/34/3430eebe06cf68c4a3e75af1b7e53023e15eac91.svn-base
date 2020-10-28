@@ -1,0 +1,84 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<zscript>					
+	import com.yewu.zscq.bean.User;
+	
+</zscript>
+<zscript><![CDATA[ 
+			User user_login = (User)session.getAttribute("user");
+			
+			String companyid = user_login.getCompanyid();
+			Boolean p1;
+			if(companyid != null && companyid .equals("1")){
+				p1=true;
+			}else{
+				p1 = false;
+			}
+]]></zscript>	
+<window id="supplierswin"  border="none" height="800px" apply="com.pjgl.suppliers.controller.SuppliersController"  >
+<radiogroup id="sv1"/>
+	<!-- 查询条件区 -->
+     <hlayout> 
+	     <vlayout>
+	        <label>名称</label>
+	     	     </vlayout>
+	     <vlayout>
+	      <textbox id="name"  />
+	          </vlayout>
+	       <vlayout>
+	         <label>地址</label>
+	       </vlayout>
+            <vlayout>
+	            <textbox id="address"/>
+       </vlayout>
+        <vlayout>
+	          <label  visible="${p1}">所属公司</label>
+	       </vlayout>
+            <vlayout>
+	       	<combobox id="company" buttonVisible="true"  width="160px"   visible="${p1}">
+	  			 <template name="model" >
+	    			<comboitem label="${each.companyName}" value="${each.id}" ></comboitem>
+	    		</template>
+	    	</combobox>
+       </vlayout>
+         </hlayout>
+
+    <!-- 按钮区 -->
+    <hlayout spacing="50px"> 
+    	<div>
+	    	<button height="20px" width="60px"  label="查询" id="queryButton"/>
+	    	<button height="20px" width="60px"  label="清空" id="clearButton"/>
+   	    	<button height="20px" width="60px"  label="新增" id="addButton"/>
+   	    	<button height="20px" width="60px"  label="编辑" id="editButton"/>
+   	    	<button height="20px" width="60px"  label="删除" id="delButton" />
+   	    </div>
+   	</hlayout>   
+   	<!-- 数据表格区 -->
+   	<separator></separator>
+<div>
+	<listbox id="listbox" emptyMessage="未查找到记录"  >
+        <listhead>
+          <listheader label="id" align="center" visible="false"/>
+          <listheader label="名称" align="center" width="100PX"/>
+          <listheader label="地址" align="center" width="100PX"/>
+          <listheader label="所属公司" align="center" width="150PX"/>
+          <listheader label="联系人" align="center" width="150PX"/>
+          <listheader label="联系方式" align="center" width="150PX"/>
+              <listheader label="备注" align="center" width="150PX"/>
+        </listhead>
+        <template name="model">
+            	<listitem id="${each.id}" value="${each}">
+            	<listcell label="${each.id}"></listcell>
+                <listcell label="${each.name}"></listcell>
+                <listcell label="${each.address}"></listcell>
+                   <listcell label="${each.companyName}"></listcell>
+                <listcell label="${each.contact}"></listcell>
+                <listcell label="${each.mobile}"></listcell>
+                <listcell label="${each.remarks}"></listcell>
+            </listitem>
+        </template>
+    </listbox>
+<paging id="paging" pageSize="10" ></paging>
+</div> 
+</window>
+</zk>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.pjgl.sockCheck.dao.StockCheckDao">
+
+<!-- 新建盘库记录 -->     
+<insert id="addStockCheck" parameterType="map" > 
+  insert into pjgl_stock_check(stockId,pjid,amounts,totalNum,ageragePrice,companyId,checkTime,pkr,amountsContrast,totalNumContrast,averagePriceContrast,remarks)
+   
+  values(#{stockId},#{pjid},#{amounts},#{totalNum},#{ageragePrice},#{companyId},sysdate(),#{pkr},#{amountsDz},#{totalNumDz},#{ageragePriceDz},#{remarks})
+  
+</insert> 
+    <!-- 获取库存记录 -->
+    <select id="selectStock" parameterType="map" resultType="com.pjgl.stock.bean.Stock">
+        sELECT s.*,p.name as pjname,p.spec as pjgg,p.unit as pjdw,p.upper_limit as upperLimit,p.lower_limit as lowerLimit 
+        FROM pjgl_stock s , pjgl_pj p 
+	  	
+	  	where s.pjid = p.id and  s.companyId = #{companyId}
+       	<if test="pjName != null and pjName != ''">
+		     AND p.name like CONCAT('%',#{pjName},'%')
+		</if>
+		
+		<if test="pjid != null and pjid != ''">
+		    AND s.pjid = #{pjid}
+		</if>
+		<if test="erweima != null and erweima != ''">
+		    AND p.code = #{erweima}
+		</if>
+		 
+		limit #{begin},#{end}
+    </select>
+<!-- 获取库存记录 总数-->
+<select id="selectStock_count" parameterType="map" resultType="int">
+    sELECT count(1) FROM pjgl_stock s , pjgl_pj p 
+    where s.pjid = p.id and  s.companyId = #{companyId}
+       	<if test="pjName != null and pjName != ''">
+		    AND p.name like CONCAT('%',#{pjName},'%')
+		</if>
+		<if test="pjid != null and pjid != ''">
+		    AND s.pjid = #{pjid}
+		</if>
+		<if test="erweima != null and erweima != ''">
+		    AND p.code = #{erweima}
+		</if>
+</select>
+
+<!-- 获得库存总金额 -->
+<select id="selectAmounts" parameterType="map" resultType="Double">
+    sELECT sum(amounts) FROM pjgl_stock s , pjgl_pj p 
+    where s.pjid = p.id and  s.companyId = #{companyId}
+       	<if test="pjName != null and pjName != ''">
+		    AND p.name like CONCAT('%',#{pjName},'%')
+		</if>
+		
+		<if test="pjid != null and pjid != ''">
+		    AND s.pjid = #{pjid}
+		</if>
+</select>
+     
+
+
+</mapper>

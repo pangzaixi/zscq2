@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.system.qxgl.dao.QxglDao">
+
+    <!-- 获取文件记录 -->
+    <select id="selectQxgl" parameterType="map" resultType="com.system.qxgl.bean.Qxgl">
+        sELECT t.*,u.user_name FROM zscq_user_menu t left join zscq_user u on t.login_name = u.login_name 
+	  
+        <where>
+        	u.companyid=#{companyid}
+		<if test="login_name != null and login_name != ''">
+		    AND t.login_name LIKE CONCAT('%',#{login_name},'%')
+		</if>
+		
+		<if test="user_name != null and user_name != ''">
+		    AND u.user_name LIKE CONCAT('%',#{user_name},'%')
+		</if>
+		
+		<if test="title != null and title != ''">
+		    AND title= #{title}
+		</if>
+		
+		</where>
+		 order by login_name
+		limit #{begin},#{end}
+    </select>
+<!-- 获取文件记录 总数-->
+<select id="selectQxgl_count" parameterType="map" resultType="int">
+    sELECT count(1) FROM zscq_user_menu t left join zscq_user u on t.login_name = u.login_name 
+     <where>
+        u.companyid=#{companyid}
+		<if test="login_name != null and login_name != ''">
+		    AND t.login_name= #{login_name}
+		</if>
+		
+		<if test="user_name != null and user_name != ''">
+		    AND u.user_name= #{user_name}
+		</if>
+		
+		<if test="title != null and title != ''">
+		    AND title= #{title}
+		</if>
+		
+	</where>
+</select>
+     
+<!-- 获得所有权限模块名称 -->
+<select id="selectQxTitle" parameterType="map" resultType="String">
+        sELECT distinct title FROM zscq_user_menu t  where login_name='superadmin' and fl is not null
+				and path !='/jsp/pjgl/company/company.zul'
+        
+</select>      
+<!-- 获取权限管理列表，排重之后的 -->  
+    <select id="selectQxglDistinct" parameterType="map" resultType="com.system.qxgl.bean.Qxgl">
+        sELECT  DISTINCT title,path,fl,orderno FROM zscq_user_menu
+         where login_name='superadmin' and fl is not null
+				and path !='/jsp/pjgl/company/company.zul'
+        <if test="title != null and title != ''">
+		    AND title= #{title}
+		</if>
+    </select> 
+<!-- 分配权限 -->     
+<insert id="insertQxgl" parameterType="map" > 
+  insert into zscq_user_menu( login_name, title,path,orderno, fl) 
+  values(#{login_name}, #{title}, #{path}, #{orderno}, #{fl})
+  
+</insert>      
+<!-- 为管理员账号授予所有权限 -->
+<insert id="insertAllQx" parameterType="map">
+insert into zscq_user_menu( login_name, title,path,orderno, fl) 
+select #{login_name},title,path,orderno,fl from zscq_user_menu where login_name='superadmin' and fl is not null
+and path !='/jsp/pjgl/company/company.zul'
+</insert>
+<!-- 删除已分配的权限 -->
+<delete id="deleteQxgl" parameterType="map" >
+	delete from  zscq_user_menu 
+	 <where>
+        <if test="id != null and id != ''">
+			and id=#{id}
+		</if>
+		<if test="login_name != null and login_name != ''">
+			and login_name=#{login_name}
+		</if>
+	</where>	
+</delete>
+</mapper>

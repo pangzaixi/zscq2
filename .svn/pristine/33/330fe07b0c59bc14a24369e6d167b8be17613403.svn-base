@@ -1,0 +1,49 @@
+<style>
+body {
+text-align: center;
+}
+div {
+display:inline-block;
+min-height:200px;
+padding:5px;
+margin:0;
+}
+header, footer {
+background-color: aquamarine;
+padding:5px;
+margin:5px;
+}
+main {
+width:100%;
+margin:0;
+}
+#main-l {
+background-color: chartreuse;
+width:20%;
+}
+#main-m {
+background-color: bisque;
+width:50%;
+/*此处的宽度占比不取60%是因为，还得留些空间给内边距（Padding）和外边距（Margin）*/
+}
+#main-r {
+background-color: coral;
+width:20%;
+}
+</style>
+<h2>1111广西北斗综合应用</h2>
+<header>
+
+</header>
+<main>
+<a href="http://114.255.9.71:7322/login.jsp" title="合作社管理">合作社管理</a> 
+<a href="http://114.255.9.78:9926/eportal/LogoutAction.do?f=0.9087606494275116" title="云服务平台">云服务平台</a>
+
+</main>
+<footer>&copy; &nbsp;<spanid="DateSpan"></span></footer>
+<script>
+/*获取当前年份*/
+var d = document.getElementById("DateSpan");
+varNowYear=newDate();
+d.innerHTML =NowYear.getFullYear();
+</script>

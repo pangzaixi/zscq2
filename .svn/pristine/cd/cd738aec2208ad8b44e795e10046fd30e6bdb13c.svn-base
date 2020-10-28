@@ -1,0 +1,171 @@
+package com.zscq2.zhangdan.conftroller;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.util.GenericForwardComposer;
+import org.zkoss.zkplus.spring.SpringUtil;
+import org.zkoss.zul.Combobox;
+import org.zkoss.zul.East;
+import org.zkoss.zul.Label;
+import org.zkoss.zul.ListModel;
+import org.zkoss.zul.ListModelList;
+import org.zkoss.zul.Listbox;
+import org.zkoss.zul.Messagebox;
+import org.zkoss.zul.Paging;
+import org.zkoss.zul.Textbox;
+import org.zkoss.zul.West;
+import org.zkoss.zul.Window;
+
+import com.zscq2.jxqd.bean.Ajlx;
+import com.zscq2.jxqd.bean.Lazb;
+import com.zscq2.jxqd.service.serviceimpl.LazbService;
+import com.zscq2.zhangdan.bean.ZdBean;
+import com.zscq2.zhangdan.service.ZdService;
+
+
+@Controller("addZdController")   
+@Scope("prototype") 
+public class AddZdController    extends GenericForwardComposer{
+Window addZdWin;
+West west;
+East east;
+Listbox listbox1;	
+Listbox listbox2;
+Combobox ajlx;//案件类型
+
+Combobox wtkhmc;
+Textbox  wtkhmc2;
+
+Textbox zdnum;
+Textbox zdid;
+//获取service对象
+ZdService zdService = (ZdService)SpringUtil.getBean("zdService");
+LazbService lazbService = (LazbService)SpringUtil.getBean("lazbService");
+
+List listbox2_list = new ArrayList<Lazb>();
+public void doAfterCompose(Component comp) throws Exception {
+	super.doAfterCompose(comp);//该行必须存在，否则异常
+	
+	session.setAttribute("addZdController", this.getController());
+	
+	
+	//委托客户
+	List<Lazb> list_wtkh = zdService.selectAllWtkhmc(null);
+	wtkhmc.setModel(new ListModelList(list_wtkh));
+	
+	
+	//案件类型
+    List<Ajlx> list_ajlx = lazbService.selectAjlx(null);
+	ListModel comboboxModelList =new ListModelList<Ajlx>();
+	comboboxModelList = null;
+	comboboxModelList = new ListModelList(list_ajlx);
+	ajlx.setModel(comboboxModelList);
+	
+}	
+/**
+ * 查询方法
+ */
+public void onClick$queryButton(){
+	 onSelect$wtkhmc();//清空已选案件
+	Map map = new HashMap<Object,Object>();
+	if(wtkhmc.getValue() != null && !"".equals(wtkhmc.getValue())){
+		map.put("wtkhmc", wtkhmc.getValue());
+	}else{
+		Messagebox.show("请选择委托客户");
+		return;
+	}
+	if(ajlx.getValue() != null  && !"".equals(ajlx.getValue())){
+		map.put("ajlx", ajlx.getSelectedItem().getLabel());
+	}else{
+		Messagebox.show("请选择案件类型");
+		return;
+	}
+	List<Lazb> list = zdService.selectJXQD(map);
+	ListModel listModelList =new ListModelList<Lazb>();
+	listModelList = null;
+	listModelList = new ListModelList(list);
+	listbox1.setModel(listModelList);
+	
+}
+/**
+ * 双击选中的左侧列表记录，添加到右侧列表
+ */
+public void onDoubleClick$listbox1(){
+	System.out.println();
+	listbox2_list.add(listbox1.getSelectedItem().getValue());
+	ListModel listModelList =new ListModelList(listbox2_list);
+	
+	listbox2.setModel(listModelList);
+	
+}
+/**
+ * 更新选中的委托客户，并清空已选择的案件
+ */
+public void onSelect$wtkhmc(){
+	System.out.println(wtkhmc.getValue());
+	wtkhmc2.setValue(wtkhmc.getValue());
+	
+	listbox2_list.clear();
+	ListModel listModelList =new ListModelList(listbox2_list);
+	listModelList = null;
+	listbox2.setModel(listModelList);
+}
+/**
+ * 选中案件类型，清空已选择的案件
+ */
+public void onSelect$ajlx(){
+	onSelect$wtkhmc();
+}
+/**
+ * 保存或更新账单生成账单
+ */
+public void onClick$saveButton(){
+//	west.setVisible(false);//点击保存后不存续新增
+	if(listbox2_list.size()==0){
+		Messagebox.show("请选择案件");
+		return;
+	}
+	west.setSize("0%");
+	east.setSize("100%");
+	//账单号：ZD19TNS2968XX
+	String zd = "ZD";
+	Calendar date = Calendar.getInstance();
+    String year = String.valueOf(date.get(Calendar.YEAR));
+    zd=zd+year.substring(2);
+    zd=zd+ajlx.getSelectedItem().getValue();
+    
+    
+    
+	ListModel listModelList =new ListModelList<Lazb>();
+	if(listbox2_list.size()==1){
+		Lazb la_begin = (Lazb)listbox2_list.get(0);
+		zd=zd+la_begin.getAjh().substring(5)+"XX";
+	}else if(listbox2_list.size()>1){
+		Lazb la_begin = (Lazb)listbox2_list.get(0);
+		Lazb la_end = (Lazb)listbox2_list.get(listbox2_list.size()-1);
+		zd=zd+la_begin.getAjh().substring(5)+la_end.getAjh().substring(7);
+	}else{
+		Messagebox.show("请选择案件");
+		return;
+	}
+    
+	zdnum.setValue(zd);
+	
+	Map map = new HashMap<Object,Object>();
+	if(zdid.getValue() != null && !"".equals(zdid.getValue())){//未保存，调用insert
+//		zdService.insertZd(map);
+//		zdService.insertZd_sub(map);
+	}else{//已经报错过，调用update
+		
+	}
+	
+}
+}

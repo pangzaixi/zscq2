@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.pjgl.stock.dao.StockDao">
+
+    <!-- 获取库存记录 -->
+    <select id="selectStock" parameterType="map" resultType="com.pjgl.stock.bean.Stock">
+        sELECT s.*,p.name as pjname,p.spec as pjgg,p.unit as pjdw,p.upper_limit as upperLimit,p.lower_limit as lowerLimit 
+        FROM pjgl_stock s , pjgl_pj p 
+	  	
+	  	where s.pjid = p.id and  s.companyId = #{companyId}
+       	<if test="pjName != null and pjName != ''">
+		     AND p.name like CONCAT('%',#{pjName},'%')
+		</if>
+		
+		<if test="pjid != null and pjid != ''">
+		    AND s.pjid = #{pjid}
+		</if>
+		<if test="erweima != null and erweima != ''">
+		    AND p.code = #{erweima}
+		</if>
+		<if test="yj != null and yj != ''">
+			and (s.totalNum  <![CDATA[ > ]]> p.upper_limit or s.totalNum  <![CDATA[ < ]]> p.lower_limit)
+		</if> 
+		limit #{begin},#{end}
+    </select>
+<!-- 获取库存记录 总数-->
+<select id="selectStock_count" parameterType="map" resultType="int">
+    sELECT count(1) FROM pjgl_stock s , pjgl_pj p 
+    where s.pjid = p.id and  s.companyId = #{companyId}
+       	<if test="pjName != null and pjName != ''">
+		    AND p.name like CONCAT('%',#{pjName},'%')
+		</if>
+		<if test="pjid != null and pjid != ''">
+		    AND s.pjid = #{pjid}
+		</if>
+		<if test="erweima != null and erweima != ''">
+		    AND p.code = #{erweima}
+		</if>
+		<if test="yj != null and yj != ''">
+			and (s.totalNum  <![CDATA[ > ]]> p.upper_limit or s.totalNum  <![CDATA[ < ]]> p.lower_limit)
+		</if> 
+</select>
+
+<!-- 获得库存总金额 -->
+<select id="selectAmounts" parameterType="map" resultType="Double">
+    sELECT sum(amounts) FROM pjgl_stock s , pjgl_pj p 
+    where s.pjid = p.id
+       	<if test="pjName != null and pjName != ''">
+		    AND p.name like CONCAT('%',#{pjName},'%')
+		</if>
+		<if test="companyId != null">
+		    AND s.companyId = #{companyId}
+		</if>
+		
+		<if test="pjid != null and pjid != ''">
+		    AND s.pjid = #{pjid}
+		</if>
+		<if test="erweima != null and erweima != ''">
+		    AND p.code = #{erweima}
+		</if>
+		<if test="yj != null and yj != ''">
+			and (s.totalNum  <![CDATA[ > ]]> p.upper_limit or s.totalNum  <![CDATA[ < ]]> p.lower_limit)
+		</if> 
+</select>
+     
+<!-- 新建绝限清单记录 -->     
+<insert id="insertStock" parameterType="map" > 
+  insert into pjgl_stock(pjid,totalNum,amounts,ageragePrice,companyId) 
+  values(#{pjid},#{totalNum},#{amounts},#{ageragePrice},#{companyId})
+  
+</insert>     
+<update id="editStock" parameterType="map" >
+	update pjgl_stock set 
+	totalNum=#{totalNum},amounts=#{amounts},ageragePrice=#{ageragePrice}
+	where id=#{id}
+</update>
+
+<!-- 根据配件ID查询库存 -->
+<select id="getByPj" parameterType="map" resultType="com.pjgl.stock.bean.Stock">
+        sELECT s.* 
+        FROM pjgl_stock s 
+	  	
+	  	where s.pjid = #{pjid} and  s.companyId = #{companyId}
+		 
+    </select>
+<!-- 更具合作社传递来的orgid查询对应在本系统中的公司id,用于获取该公司的库存，供合作社显示 -->
+<select id="selectOrgMapping" parameterType="String" resultType="String">
+	select companyid from pjgl_mapping where orgid=#{orgid} 
+</select>
+
+
+<!-- 获取库存记录,合作社专用 -->
+<select id="selectStockForHZS" parameterType="map" resultType="com.pjgl.stock.bean.Stock">
+select * from pjgl_stock where companyId=#{companyId} order by totalNum desc limit #{begin},#{end};
+</select>
+</mapper>

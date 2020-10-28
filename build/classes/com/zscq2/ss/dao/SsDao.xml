@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zscq2.ss.dao.SsDao">
+
+    <!-- 获取文件记录 -->
+    <select id="selectSsaj" parameterType="map" resultType="com.zscq2.ss.bean.Ssaj">
+        sELECT * FROM zscq_ss_ssaj 
+	  
+        <where>
+        <if test="ajh != null and ajh != ''">
+			and ajh=#{ajh}
+		</if>
+		<if test="ajlx != null and ajlx != ''">
+			and ajlx = #{ajlx}
+		</if>
+		<if test="ajzt != null and ajzt != ''">
+			and ajzt = #{ajzt}
+		</if>
+		<if test="yg != null and yg != ''">
+		    AND yg like CONCAT('%',#{yg},'%')
+		</if>
+		<if test="bg != null and bg != ''">
+		    AND bg like CONCAT('%',#{bg},'%')
+		</if>
+		
+		</where>
+		  ORDER BY ID DESC
+		limit #{begin},#{end}
+    </select>
+<!-- 获取文件记录 总数-->
+<select id="selectSsaj_count" parameterType="map" resultType="int">
+    sELECT count(1) FROM zscq_ss_ssaj 
+    <where>
+    	<if test="ajh != null and ajh != ''">
+			and ajh=#{ajh}
+		</if>
+		<if test="ajlx != null and ajlx != ''">
+			and ajlx = #{ajlx}
+		</if>
+		<if test="ajzt != null and ajzt != ''">
+			and ajzt = #{ajzt}
+		</if>
+		<if test="yg != null and yg != ''">
+		    AND yg like CONCAT('%',#{yg},'%')
+		</if>
+		<if test="bg != null and bg != ''">
+		    AND bg like CONCAT('%',#{bg},'%')
+		</if>
+    </where>
+   
+</select>
+<!-- 写入诉讼案件 -->     
+<insert id="insertSsaj" parameterType="map" > 
+  insert into zscq_ss_ssaj
+  (ajh,ajlx,hth,ay,ajzt,yg,bg,dsr,gxfy,szbd,sj,wtrq,larq,dbrq,ktrq,dtjclrq,pjsdrq,ssqjxr,dlr,
+  lhbar,sjydh,cbfg,jcdlf,fxdlf,zf,kjfp,remarks,creater,createdate) 
+  
+  values(#{ajh}, #{ajlx},#{hth}, #{ay}, #{ajzt}, #{yg},#{bg}, #{dsr}, #{gxfy}, #{szbd}, #{sj}, #{wtrq}, #{larq}, #{dbrq},
+   #{ktrq}, #{dtjclrq}, #{pjsdrq}, #{ssqjxr}, #{dlr}, #{lhbar}, #{sjydh},#{cbfg},#{jcdlf}, 
+   #{fxdlf}, #{zf},#{kjfp},#{remarks},#{creater},
+    sysdate() )
+  
+</insert>     
+<!-- 更新诉讼案件 -->
+<update id="updateSsaj" parameterType="map" >
+update zscq_ss_ssaj set hth=#{hth}, 
+ay=#{ay},ajzt=#{ajzt},yg=#{yg},bg=#{bg},dsr=#{dsr},gxfy=#{gxfy},szbd=#{szbd},
+sj=#{sj},wtrq=#{wtrq},larq=#{larq},dbrq=#{dbrq},ktrq=#{ktrq},dtjclrq=#{dtjclrq},pjsdrq=#{pjsdrq},
+ssqjxr=#{ssqjxr},dlr=#{dlr},  lhbar=#{lhbar},sjydh=#{sjydh},cbfg=#{cbfg},jcdlf=#{jcdlf},
+fxdlf=#{fxdlf},zf=#{zf},kjfp=#{kjfp},remarks=#{remarks},updater=#{updater},updatedate=sysdate()
+
+where id=#{id}
+</update>
+<delete id="deleteSsaj" parameterType="map">
+delete from zscq_ss_ssaj where id=#{id}
+</delete>
+<!-- 获得当前最大诉讼案件号排序 -->
+<select id="maxAjh" parameterType="map" resultType="int">
+	select max(substr(ajh,6,13))  from zscq_ss_ssaj 	
+</select>  
+
+<!-- 诉讼流程 -->   
+<select id="selectSslc" parameterType="map" resultType="com.zscq2.ss.bean.Sslc">
+        sELECT * FROM zscq_ss_sslc where pid=#{pid} order by id desc
+</select>   
+
+<!-- 写入诉讼案件流程信息 -->  
+<insert id="insertSsajLc" parameterType="map" > 
+	insert into zscq_ss_sslc (ajh,createdate,context,creater,qt,pid)
+	values(#{ajh},sysdate(),#{context},#{creater},#{qt},#{pid})
+</insert>   
+</mapper>
